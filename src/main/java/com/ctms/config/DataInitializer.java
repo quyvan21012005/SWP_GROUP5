@@ -30,6 +30,18 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (userRepository.count() > 0) {
+            // Đảm bảo 4 tài khoản mặc định luôn có mật khẩu chuẩn "password123"
+            // phòng trường hợp DB được tạo từ bản script SQL cũ có mã BCrypt bị lệch
+            List<String> defaultUsernames = List.of("manager", "operator", "shipping_maersk", "driver");
+            for (String username : defaultUsernames) {
+                userRepository.findByUsername(username).ifPresent(user -> {
+                    if (!passwordEncoder.matches("password123", user.getPassword())) {
+                        user.setPassword(passwordEncoder.encode("password123"));
+                        userRepository.save(user);
+                        log.info("Đã đồng bộ lại mật khẩu mặc định (password123) cho tài khoản: {}", username);
+                    }
+                });
+            }
             log.info("Dữ liệu ban đầu đã tồn tại.");
             return;
         }

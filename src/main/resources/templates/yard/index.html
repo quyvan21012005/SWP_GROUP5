@@ -6,21 +6,21 @@
         <div id="main-content" class="space-y-6" x-data="{ assignModal: false, moveModal: false, selectedSlot: null, selectedFromSlot: null, selectedToSlot: null }">
 
             <!-- Page Header -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
                 <div>
                     <h1 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
-                        <i class="fa-solid fa-cubes-stacked text-emerald-600"></i> Bản Đồ Bãi Container (Yard Map)
+                        <i class="fa-solid fa-cubes-stacked text-emerald-600"></i> Sơ Đồ Bãi Container (Yard Planning Map)
                     </h1>
-                    <p class="text-sm text-slate-500 mt-1">
-                        Mô hình trực quan <b>3 Khối (Block A, B, C)</b> với tổng cộng <b>48 Ô vị trí (Slots)</b>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Sơ đồ quy hoạch bãi container trực quan phân bổ theo các phân khu <b>Khối A, Khối B, Khối C</b>
                     </p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
-                    <button @click="assignModal = true" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-arrow-down-to-bracket"></i> Xếp Cont Vào Bãi (Assign)
+                    <button @click="assignModal = true" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 shadow-sm cursor-pointer">
+                        <i class="fa-solid fa-arrow-down-to-bracket"></i> Chỉ Định Vị Trí Bãi
                     </button>
-                    <button @click="moveModal = true" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-arrows-split-up-and-left"></i> Đảo Vị Trí Ô (Move)
+                    <button @click="moveModal = true" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 shadow-sm cursor-pointer">
+                        <i class="fa-solid fa-arrows-split-up-and-left"></i> Đảo Chuyển Container
                     </button>
                 </div>
             </div>

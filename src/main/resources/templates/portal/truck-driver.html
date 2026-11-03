@@ -6,31 +6,32 @@
         <div id="main-content" class="space-y-6">
 
             <!-- Banner Chào Mừng & Thông Tin Tài Xế -->
-            <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm border border-purple-800/40">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-purple-950 text-white p-7 rounded-2xl shadow-md border border-slate-700/60 relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div>
-                        <div class="flex items-center gap-2 mb-2 flex-wrap">
-                            <span class="px-2.5 py-0.5 rounded-full bg-purple-500/30 text-purple-200 text-xs font-semibold uppercase tracking-wider">
-                                <i class="fa-solid fa-truck"></i> Cổng Tài Xế Xe Tải
+                        <div class="flex items-center gap-2 mb-2.5 flex-wrap">
+                            <span class="px-2.5 py-0.5 rounded-full bg-purple-400/15 text-purple-300 text-[11px] font-semibold uppercase tracking-wider border border-purple-400/30">
+                                <i class="fa-solid fa-truck-moving text-[10px]"></i> Cổng Giao Nhận Vận Tải
                             </span>
-                            <span th:if="${currentUser != null}" class="px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-300 text-xs font-medium">
-                                <i class="fa-solid fa-circle-check"></i> Đã đăng nhập
+                            <span th:if="${currentUser != null}" class="px-2.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-300 text-[11px] font-medium border border-emerald-400/30">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Đã định danh tài xế
                             </span>
                         </div>
-                        <h1 class="text-2xl font-bold flex items-center gap-2">
-                            <span>Xin chào, </span>
+                        <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                            <span>Chào mừng, </span>
                             <span class="text-purple-300" th:text="${currentUser != null ? currentUser.fullName : 'Tài Xế'}">Lê Văn Tài Xế</span>
                         </h1>
-                        <div class="flex items-center gap-4 text-xs text-purple-200 mt-2 flex-wrap">
-                            <span><i class="fa-solid fa-phone text-purple-400"></i> SĐT: <strong th:text="${currentUser != null ? currentUser.phone : '0904567890'}">0904567890</strong></span>
+                        <div class="flex items-center gap-4 text-xs text-slate-300 mt-2 flex-wrap">
+                            <span><i class="fa-solid fa-phone text-purple-400"></i> Hotline/SĐT: <strong class="text-white" th:text="${currentUser != null ? currentUser.phone : '0904567890'}">0904567890</strong></span>
                             <span>
-                                <i class="fa-solid fa-id-card text-purple-400"></i> Biển số xe tải: 
-                                <strong class="bg-purple-800/80 px-2.5 py-0.5 rounded font-mono text-white text-xs border border-purple-600/50" th:text="${currentUser != null && currentUser.licensePlate != null ? currentUser.licensePlate : '51C-889.92'}">51C-889.92</strong>
+                                <i class="fa-solid fa-id-card text-purple-400"></i> Biển số xe đầu kéo: 
+                                <strong class="bg-purple-900/60 px-2.5 py-0.5 rounded-md font-mono text-purple-200 text-xs border border-purple-500/40" th:text="${currentUser != null && currentUser.licensePlate != null ? currentUser.licensePlate : '51C-889.92'}">51C-889.92</strong>
                             </span>
                         </div>
                     </div>
-                    <button type="button" onclick="openBookModalDirect()" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-purple-600/30 transition flex items-center gap-2 shrink-0 cursor-pointer">
-                        <i class="fa-solid fa-calendar-plus"></i> Đặt Lịch Hẹn Mới
+                    <button type="button" onclick="openBookModalDirect()" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-purple-900/40 transition flex items-center gap-2 shrink-0 cursor-pointer">
+                        <i class="fa-solid fa-calendar-plus"></i> Đăng Ký Lịch Hẹn Mới
                     </button>
                 </div>
             </div>

@@ -195,10 +195,10 @@ GO
 -- 4.2. Người dùng (Users - Mật khẩu mặc định: password123, mã hóa BCrypt)
 SET IDENTITY_INSERT dbo.users ON;
 INSERT INTO dbo.users (id, username, password, full_name, role, email, phone, license_plate, shipping_line_id) VALUES
-(1, 'manager', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', N'Nguyễn Văn Quản Lý', 'ROLE_MANAGER', 'manager@ctms.port.vn', '0901234567', NULL, NULL),
-(2, 'operator', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', N'Trần Điều Hành', 'ROLE_OPERATOR', 'operator@ctms.port.vn', '0902345678', NULL, NULL),
-(3, 'shipping_maersk', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', N'Đại Diện Hãng Tàu Maersk', 'ROLE_SHIPPING_LINE', 'agent@maersk.com', '0903456789', NULL, 1),
-(4, 'driver', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', N'Lê Văn Tài Xế', 'ROLE_TRUCK_DRIVER', 'driver01@transport.vn', '0904567890', '51C-889.92', NULL);
+(1, 'manager', '$2a$10$9QClewgYMuTGXm7ttkOWy.UiyDPbK7m3MAl82.KsP4i4OuCtY82sS', N'Nguyễn Văn Quản Lý', 'ROLE_MANAGER', 'manager@ctms.port.vn', '0901234567', NULL, NULL),
+(2, 'operator', '$2a$10$9QClewgYMuTGXm7ttkOWy.UiyDPbK7m3MAl82.KsP4i4OuCtY82sS', N'Trần Điều Hành', 'ROLE_OPERATOR', 'operator@ctms.port.vn', '0902345678', NULL, NULL),
+(3, 'shipping_maersk', '$2a$10$9QClewgYMuTGXm7ttkOWy.UiyDPbK7m3MAl82.KsP4i4OuCtY82sS', N'Đại Diện Hãng Tàu Maersk', 'ROLE_SHIPPING_LINE', 'agent@maersk.com', '0903456789', NULL, 1),
+(4, 'driver', '$2a$10$9QClewgYMuTGXm7ttkOWy.UiyDPbK7m3MAl82.KsP4i4OuCtY82sS', N'Lê Văn Tài Xế', 'ROLE_TRUCK_DRIVER', 'driver01@transport.vn', '0904567890', '51C-889.92', NULL);
 SET IDENTITY_INSERT dbo.users OFF;
 GO
 

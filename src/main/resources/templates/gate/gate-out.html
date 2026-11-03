@@ -7,14 +7,14 @@
 
             <!-- Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 bg-gradient-to-r from-rose-600 to-pink-700 text-white">
+                <div class="p-6 bg-gradient-to-r from-slate-900 via-slate-800 to-rose-950 text-white">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl">
+                        <div class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-400/30 flex items-center justify-center text-2xl text-rose-400">
                             <i class="fa-solid fa-right-from-bracket"></i>
                         </div>
                         <div>
-                            <h1 class="text-xl font-bold">Thủ Tục Xác Nhận Xe Rời Cổng (Confirm Gate Out)</h1>
-                            <p class="text-xs text-rose-100 mt-0.5">Tự động giải phóng vị trí bãi và sinh nhật ký Gate Out</p>
+                            <h1 class="text-xl font-bold">Thủ Tục Kiểm Soát Xe Rời Cổng (Gate Out)</h1>
+                            <p class="text-xs text-slate-300 mt-0.5">Kiểm tra tình trạng container xuất cảng, giải phóng vị trí bãi và ghi nhận nhật ký Gate Out</p>
                         </div>
                     </div>
                 </div>
@@ -60,8 +60,8 @@
                         <a th:href="@{/gate}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">
                             &larr; Quay lại
                         </a>
-                        <button type="submit" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center gap-2">
-                            <i class="fa-solid fa-check"></i> Xác Nhận Cho Xe Xuất Cổng (Confirm Gate Out)
+                        <button type="submit" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-check"></i> Xác Nhận Cho Xe Rời Cổng (Gate Out)
                         </button>
                     </div>
                 </form>

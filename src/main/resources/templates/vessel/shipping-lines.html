@@ -22,8 +22,9 @@
                 <div th:each="line : ${shippingLines}" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
-                            <span class="w-12 h-12 rounded-xl bg-violet-50 text-violet-700 font-extrabold flex items-center justify-center font-mono text-base shadow-sm" th:text="${line.code}">MAE</span>
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold">Đối tác tích cực</span>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đang hợp tác
+                            </span>
                         </div>
                         <h3 class="font-bold text-base text-slate-800 mb-2" th:text="${line.name}">Maersk Line</h3>
                         <div class="space-y-1.5 text-xs text-slate-600">

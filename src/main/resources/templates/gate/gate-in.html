@@ -7,23 +7,23 @@
 
             <!-- Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 bg-gradient-to-r from-emerald-600 to-teal-700 text-white">
+                <div class="p-6 bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-2xl text-emerald-400">
                             <i class="fa-solid fa-right-to-bracket"></i>
                         </div>
                         <div>
-                            <h1 class="text-xl font-bold">Thủ Tục Xác Nhận Xe Vào Cổng (Confirm Gate In)</h1>
-                            <p class="text-xs text-emerald-100 mt-0.5">Quy trình bắt buộc: Verify Container & Tự động Record Movement</p>
+                            <h1 class="text-xl font-bold">Thủ Tục Kiểm Soát Xe Vào Cổng (Gate In)</h1>
+                            <p class="text-xs text-slate-300 mt-0.5">Xác minh đối soát thông tin phương tiện, niêm chì seal và tiếp nhận container vào bãi cảng</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Highlight Include alert -->
-                <div class="bg-emerald-50/70 p-4 border-b border-emerald-100 flex items-center gap-3 text-xs text-emerald-900">
-                    <i class="fa-solid fa-circle-info text-emerald-600 text-base"></i>
+                <!-- Inspection Standard alert -->
+                <div class="bg-emerald-50/80 p-4 border-b border-emerald-100 flex items-center gap-3 text-xs text-emerald-900">
+                    <i class="fa-solid fa-shield-halved text-emerald-600 text-base shrink-0"></i>
                     <div>
-                        <b>Quy trình Use Case bao gồm (<<include>>):</b> Hệ thống sẽ tự động xác minh tính hợp lệ của Seal, tình trạng vỏ cont, đối soát Booking và sinh nhật ký di chuyển thời gian thực.
+                        <b>Quy trình kiểm soát an ninh cảng:</b> Đối chiếu số niêm chì (Seal), giám sát ngoại quan vỏ container, xác thực số xe đầu kéo theo đăng ký và ghi nhận nhật ký vào cổng thời gian thực.
                     </div>
                 </div>
 
@@ -116,8 +116,8 @@
                         <a th:href="@{/gate}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">
                             &larr; Quay lại
                         </a>
-                        <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-2">
-                            <i class="fa-solid fa-check"></i> Xác Nhận Cho Xe Vào Cổng (Confirm Gate In)
+                        <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-check"></i> Xác Nhận Tiếp Nhận Gate In
                         </button>
                     </div>
                 </form>

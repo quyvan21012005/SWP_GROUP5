@@ -6,20 +6,26 @@
         <div id="main-content" class="space-y-6">
 
             <!-- Banner -->
-            <div class="bg-gradient-to-r from-sky-800 to-indigo-900 text-white p-6 rounded-2xl shadow-sm">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-sky-950 text-white p-7 rounded-2xl shadow-md border border-slate-700/60 relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div>
-                        <span class="px-2.5 py-0.5 rounded-full bg-sky-500/30 text-sky-200 text-xs font-semibold uppercase tracking-wider">
-                            Cổng Dịch Vụ Khách Hàng Bên Ngoài (Actor: Shipping Line)
-                        </span>
-                        <h1 class="text-2xl font-bold mt-1">Cổng Quản Trị Hãng Tàu Đối Tác</h1>
-                        <p class="text-xs text-sky-200 mt-1">
-                            Xem thông tin vận chuyển riêng (View Own Shipping Info) & Tra cứu lịch tàu (View Vessel Schedule)
+                        <div class="flex items-center gap-2 mb-2.5 flex-wrap">
+                            <span class="px-2.5 py-0.5 rounded-full bg-sky-400/15 text-sky-300 text-[11px] font-semibold uppercase tracking-wider border border-sky-400/30">
+                                <i class="fa-solid fa-ship text-[10px]"></i> Cổng Khách Hàng Hãng Tàu
+                            </span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-400/15 text-emerald-300 text-[11px] font-medium border border-emerald-400/30">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Đồng bộ dữ liệu TOS
+                            </span>
+                        </div>
+                        <h1 class="text-2xl font-black tracking-tight text-white">Cổng Thông Tin Hãng Tàu Đối Tác</h1>
+                        <p class="text-xs text-slate-300 mt-1 max-w-xl">
+                            Theo dõi hải trình đội tàu, kiểm soát tồn bãi container và kế hoạch cập bến thời gian thực.
                         </p>
                     </div>
-                    <div class="text-right">
-                        <div class="text-xs text-sky-300">Hãng tàu đang đăng nhập:</div>
-                        <div class="text-lg font-bold text-white">MAERSK LINE (MAE)</div>
+                    <div class="text-right bg-slate-800/80 p-4 rounded-xl border border-slate-700/80 shrink-0">
+                        <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Hãng Tàu Đối Tác:</div>
+                        <div class="text-lg font-black text-sky-400 mt-0.5">MAERSK LINE (MAE)</div>
                     </div>
                 </div>
             </div>

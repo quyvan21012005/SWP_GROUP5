@@ -61,6 +61,16 @@
                             <div class="text-[11px] text-slate-500 font-mono mt-1">
                                 Cập bến: <span th:text="${#temporals.format(berth.currentVessel.eta, 'dd/MM/yyyy HH:mm')}">--</span>
                             </div>
+                            <div class="mt-2 pt-2 border-t border-blue-200/70 flex items-center justify-between text-xs">
+                                <span class="text-blue-900 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-file-shield text-emerald-600"></i> Giấy thông quan HQ:
+                                </span>
+                                <span th:if="${berth.currentVessel.customsClearanceCode != null}"
+                                      class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono font-bold text-[11px]"
+                                      th:text="${berth.currentVessel.customsClearanceCode}">HQ-SHIP-2026-001</span>
+                                <span th:if="${berth.currentVessel.customsClearanceCode == null}"
+                                      class="px-2 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px]">Chưa thông quan</span>
+                            </div>
                         </div>
 
                         <div th:if="${berth.currentVessel == null}" class="p-6 rounded-xl bg-slate-50 border border-slate-200/60 text-center text-slate-400 text-xs">
@@ -101,9 +111,19 @@
                             <select name="vesselId" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500">
                                 <option value="">-- Chọn tàu đang lên lịch cập cảng --</option>
                                 <option th:each="v : ${scheduledVessels}" th:value="${v.id}"
-                                        th:text="${v.name} + ' (' + ${v.shippingLine.name} + ' - ' + ${v.capacityTeu} + ' TEU)'">
+                                        th:text="${v.name} + ' (' + ${v.shippingLine.name} + ' - HQ: ' + (${v.customsClearanceCode != null} ? ${v.customsClearanceCode} : 'Chưa có') + ')'">
                                 </option>
                             </select>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5">
+                            <label class="block text-xs font-bold text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-shield text-emerald-600"></i> Số Giấy Thông Quan Hải Quan Tàu Biển *
+                            </label>
+                            <input type="text" name="customsClearanceCode" placeholder="VD: HQ-SHIP-2026-002 (Nếu tàu đã khai báo sẽ tự động lấy)"
+                                   class="w-full p-2.5 bg-white border border-emerald-300 rounded-xl text-xs font-mono font-bold uppercase text-emerald-900 focus:ring-2 focus:ring-emerald-500">
+                            <p class="text-[11px] text-emerald-700">
+                                * Tàu bắt buộc phải có Giấy thông quan Hải quan hợp lệ mới được phép cập cầu bến làm hàng.
+                            </p>
                         </div>
                         <div class="p-3.5 bg-sky-50 rounded-xl text-xs text-sky-900 border border-sky-100 flex items-start gap-2.5">
                             <i class="fa-solid fa-circle-info text-sky-600 text-sm mt-0.5 shrink-0"></i>
@@ -136,7 +156,7 @@
                                 <th class="py-3 px-4 font-semibold">Số IMO</th>
                                 <th class="py-3 px-4 font-semibold">Hãng Tàu</th>
                                 <th class="py-3 px-4 font-semibold">Sức chứa (TEU)</th>
-                                <th class="py-3 px-4 font-semibold">Chiều dài (m)</th>
+                                <th class="py-3 px-4 font-semibold">Giấy Thông Quan HQ</th>
                                 <th class="py-3 px-4 font-semibold">ETA (Dự kiến đến)</th>
                                 <th class="py-3 px-4 font-semibold">Cầu Bến</th>
                                 <th class="py-3 px-4 font-semibold">Trạng Thái</th>
@@ -148,7 +168,17 @@
                                 <td class="py-3 px-4 font-mono text-slate-500" th:text="${v.imoNumber}">IMO9703291</td>
                                 <td class="py-3 px-4 text-slate-700 font-medium" th:text="${v.shippingLine.name}">MSC</td>
                                 <td class="py-3 px-4 font-mono text-slate-600" th:text="${#numbers.formatInteger(v.capacityTeu, 3, 'POINT')}">19.224</td>
-                                <td class="py-3 px-4 text-slate-600" th:text="${v.lengthMeters} + ' m'">395.4 m</td>
+                                <td class="py-3 px-4">
+                                    <span th:if="${v.customsClearanceCode != null and !#strings.isEmpty(v.customsClearanceCode)}"
+                                          class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono font-bold text-[11px] inline-flex items-center gap-1">
+                                        <i class="fa-solid fa-file-shield text-emerald-600"></i>
+                                        <span th:text="${v.customsClearanceCode}">HQ-SHIP-2026-001</span>
+                                    </span>
+                                    <span th:if="${v.customsClearanceCode == null or #strings.isEmpty(v.customsClearanceCode)}"
+                                          class="px-2 py-0.5 rounded bg-rose-100 text-rose-700 text-[10px] font-bold">
+                                        Chưa có giấy HQ
+                                    </span>
+                                </td>
                                 <td class="py-3 px-4 text-slate-600 font-mono" th:text="${#temporals.format(v.eta, 'dd/MM/yyyy HH:mm')}">23/09 14:00</td>
                                 <td class="py-3 px-4">
                                     <span th:if="${v.assignedBerth != null}" class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-bold font-mono text-[10px]" th:text="${v.assignedBerth.berthCode}">B-01</span>

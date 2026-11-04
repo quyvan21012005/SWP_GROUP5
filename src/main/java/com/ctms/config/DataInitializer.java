@@ -42,6 +42,30 @@ public class DataInitializer implements CommandLineRunner {
                     }
                 });
             }
+
+            // Đồng bộ dữ liệu Giấy thông quan Hải quan cho các bản ghi Tàu, Container, Lịch hẹn cũ (nếu chưa có)
+            for (Vessel v : vesselRepository.findAll()) {
+                if (v.getCustomsClearanceCode() == null || v.getCustomsClearanceCode().isBlank()) {
+                    v.setCustomsClearanceCode("HQ-SHIP-2026-00" + v.getId());
+                    v.setCustomsCleared(true);
+                    vesselRepository.save(v);
+                }
+            }
+            for (Container c : containerRepository.findAll()) {
+                if (c.getCustomsClearanceCode() == null || c.getCustomsClearanceCode().isBlank()) {
+                    c.setCustomsClearanceCode("HQ-CONT-2026-00" + c.getId());
+                    c.setCustomsCleared(true);
+                    containerRepository.save(c);
+                }
+            }
+            for (Appointment a : appointmentRepository.findAll()) {
+                if (a.getCustomsClearanceCode() == null || a.getCustomsClearanceCode().isBlank()) {
+                    a.setCustomsClearanceCode("HQ-VNACCS-2026-00" + a.getId());
+                    a.setCustomsCleared(true);
+                    appointmentRepository.save(a);
+                }
+            }
+
             log.info("Dữ liệu ban đầu đã tồn tại.");
             return;
         }
@@ -139,6 +163,8 @@ public class DataInitializer implements CommandLineRunner {
                 .eta(LocalDateTime.now().minusHours(8))
                 .etd(LocalDateTime.now().plusHours(16))
                 .assignedBerth(berth1)
+                .customsClearanceCode("HQ-SHIP-2026-001")
+                .customsCleared(true)
                 .build());
 
         berth1.setCurrentVessel(vessel1);
@@ -153,6 +179,8 @@ public class DataInitializer implements CommandLineRunner {
                 .status(Vessel.VesselStatus.SCHEDULED)
                 .eta(LocalDateTime.now().plusDays(1))
                 .etd(LocalDateTime.now().plusDays(2))
+                .customsClearanceCode("HQ-SHIP-2026-002")
+                .customsCleared(true)
                 .build());
 
         Vessel vessel3 = vesselRepository.save(Vessel.builder()
@@ -164,6 +192,8 @@ public class DataInitializer implements CommandLineRunner {
                 .status(Vessel.VesselStatus.SCHEDULED)
                 .eta(LocalDateTime.now().plusDays(2))
                 .etd(LocalDateTime.now().plusDays(3))
+                .customsClearanceCode("HQ-SHIP-2026-003")
+                .customsCleared(true)
                 .build());
 
         // 5. Khởi tạo 48 ô bãi (Yard Slots: Block A: 16 slots, Block B: 16 slots, Block C: 16 slots)
@@ -186,14 +216,14 @@ public class DataInitializer implements CommandLineRunner {
 
         // 6. Tạo Containers mẫu (Đa dạng DRY/REEFER, FULL/EMPTY, GOOD/DAMAGED)
         List<Container> initialContainers = List.of(
-                Container.builder().containerNumber("MSKU9182736").isoType("40HC").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.GOOD).shippingLine(maersk).sealNumber("SL-99881").grossWeightKg(28400.0).currentStatus(Container.TrackingStatus.IN_YARD).build(),
-                Container.builder().containerNumber("MSKU3451290").isoType("20GP").containerType(Container.ContainerType.REEFER).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.GOOD).shippingLine(maersk).sealNumber("SL-99882").grossWeightKg(22100.0).currentStatus(Container.TrackingStatus.IN_YARD).build(),
-                Container.builder().containerNumber("MSCU1122334").isoType("40HC").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.EMPTY).condition(Container.Condition.GOOD).shippingLine(msc).sealNumber("SL-77661").grossWeightKg(3800.0).currentStatus(Container.TrackingStatus.IN_YARD).build(),
-                Container.builder().containerNumber("MSCU5566778").isoType("40HC").containerType(Container.ContainerType.REEFER).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.DAMAGED).shippingLine(msc).sealNumber("SL-77662").grossWeightKg(29100.0).currentStatus(Container.TrackingStatus.IN_YARD).build(),
-                Container.builder().containerNumber("CMAU9988776").isoType("20GP").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.GOOD).shippingLine(cma).sealNumber("SL-55441").grossWeightKg(21500.0).currentStatus(Container.TrackingStatus.IN_YARD).build(),
-                Container.builder().containerNumber("CMAU3344556").isoType("45HC").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.EMPTY).condition(Container.Condition.GOOD).shippingLine(cma).sealNumber("SL-55442").grossWeightKg(4200.0).currentStatus(Container.TrackingStatus.IN_YARD).build(),
-                Container.builder().containerNumber("MSKU7711223").isoType("40HC").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.GOOD).shippingLine(maersk).sealNumber("SL-99883").grossWeightKg(27800.0).currentStatus(Container.TrackingStatus.GATE_IN).build(),
-                Container.builder().containerNumber("MSCU9900112").isoType("20GP").containerType(Container.ContainerType.REEFER).cargoStatus(Container.CargoStatus.EMPTY).condition(Container.Condition.GOOD).shippingLine(msc).sealNumber("SL-77663").grossWeightKg(2900.0).currentStatus(Container.TrackingStatus.EXPECTED).build()
+                Container.builder().containerNumber("MSKU9182736").isoType("40HC").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.GOOD).shippingLine(maersk).sealNumber("SL-99881").grossWeightKg(28400.0).currentStatus(Container.TrackingStatus.IN_YARD).customsClearanceCode("HQ-CONT-2026-001").customsCleared(true).build(),
+                Container.builder().containerNumber("MSKU3451290").isoType("20GP").containerType(Container.ContainerType.REEFER).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.GOOD).shippingLine(maersk).sealNumber("SL-99882").grossWeightKg(22100.0).currentStatus(Container.TrackingStatus.IN_YARD).customsClearanceCode("HQ-CONT-2026-002").customsCleared(true).build(),
+                Container.builder().containerNumber("MSCU1122334").isoType("40HC").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.EMPTY).condition(Container.Condition.GOOD).shippingLine(msc).sealNumber("SL-77661").grossWeightKg(3800.0).currentStatus(Container.TrackingStatus.IN_YARD).customsClearanceCode("HQ-CONT-2026-003").customsCleared(true).build(),
+                Container.builder().containerNumber("MSCU5566778").isoType("40HC").containerType(Container.ContainerType.REEFER).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.DAMAGED).shippingLine(msc).sealNumber("SL-77662").grossWeightKg(29100.0).currentStatus(Container.TrackingStatus.IN_YARD).customsClearanceCode("HQ-CONT-2026-004").customsCleared(true).build(),
+                Container.builder().containerNumber("CMAU9988776").isoType("20GP").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.GOOD).shippingLine(cma).sealNumber("SL-55441").grossWeightKg(21500.0).currentStatus(Container.TrackingStatus.IN_YARD).customsClearanceCode("HQ-CONT-2026-005").customsCleared(true).build(),
+                Container.builder().containerNumber("CMAU3344556").isoType("45HC").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.EMPTY).condition(Container.Condition.GOOD).shippingLine(cma).sealNumber("SL-55442").grossWeightKg(4200.0).currentStatus(Container.TrackingStatus.IN_YARD).customsClearanceCode("HQ-CONT-2026-006").customsCleared(true).build(),
+                Container.builder().containerNumber("MSKU7711223").isoType("40HC").containerType(Container.ContainerType.DRY).cargoStatus(Container.CargoStatus.FULL).condition(Container.Condition.GOOD).shippingLine(maersk).sealNumber("SL-99883").grossWeightKg(27800.0).currentStatus(Container.TrackingStatus.GATE_IN).customsClearanceCode("HQ-CONT-2026-007").customsCleared(true).build(),
+                Container.builder().containerNumber("MSCU9900112").isoType("20GP").containerType(Container.ContainerType.REEFER).cargoStatus(Container.CargoStatus.EMPTY).condition(Container.Condition.GOOD).shippingLine(msc).sealNumber("SL-77663").grossWeightKg(2900.0).currentStatus(Container.TrackingStatus.EXPECTED).customsClearanceCode("HQ-CONT-2026-008").customsCleared(true).build()
         );
 
         List<Container> savedContainers = containerRepository.saveAll(initialContainers);
@@ -229,8 +259,10 @@ public class DataInitializer implements CommandLineRunner {
                 .driverPhone("0904567890")
                 .appointmentTime(LocalDateTime.now().plusHours(3))
                 .sealNumber(savedContainers.get(0).getSealNumber())
+                .customsClearanceCode("HQ-VNACCS-2026-001")
+                .customsCleared(true)
                 .status(Appointment.AppointmentStatus.CONFIRMED)
-                .notes("Xe tải hẹn đến lấy cont nhập khẩu số MSKU9182736")
+                .notes("Xe tải hẹn đến lấy cont nhập khẩu số MSKU9182736 | Giấy thông quan HQ: HQ-VNACCS-2026-001")
                 .build());
 
         appointmentRepository.save(Appointment.builder()
@@ -243,8 +275,10 @@ public class DataInitializer implements CommandLineRunner {
                 .driverPhone("0904567890")
                 .appointmentTime(LocalDateTime.now().minusMinutes(30))
                 .sealNumber("SL-99883")
+                .customsClearanceCode("HQ-VNACCS-2026-002")
+                .customsCleared(true)
                 .status(Appointment.AppointmentStatus.CHECKED_IN)
-                .notes("Hạ cont xuất khẩu đi tàu MSC Oscar")
+                .notes("Hạ cont xuất khẩu đi tàu MSC Oscar | Giấy thông quan HQ: HQ-VNACCS-2026-002")
                 .build());
 
         log.info("Khởi tạo dữ liệu mẫu hoàn tất!");

@@ -66,13 +66,14 @@ public class GateController {
                                 @RequestParam(value = "condition", defaultValue = "GOOD") Container.Condition condition,
                                 @RequestParam(value = "bookingNumber", required = false) String bookingNumber,
                                 @RequestParam("licensePlate") String licensePlate,
+                                @RequestParam("customsClearanceCode") String customsClearanceCode,
                                 @AuthenticationPrincipal UserDetails userDetails,
                                 RedirectAttributes redirectAttributes) {
         try {
             String operatorName = userDetails != null ? userDetails.getUsername() : "Gate Operator";
-            gateService.confirmGateIn(containerNumber, sealNumber, containerType, cargoStatus, condition, bookingNumber, licensePlate, operatorName);
+            gateService.confirmGateIn(containerNumber, sealNumber, containerType, cargoStatus, condition, bookingNumber, licensePlate, customsClearanceCode, operatorName);
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Xác nhận xe " + licensePlate + " mang cont " + containerNumber + " vào cổng (Gate In) thành công! Nhật ký di chuyển đã được ghi nhận tự động.");
+                    "Xác nhận xe " + licensePlate + " mang cont " + containerNumber + " (Giấy thông quan HQ: " + customsClearanceCode.toUpperCase() + ") vào cổng (Gate In) thành công!");
             return "redirect:/gate";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi Gate In: " + e.getMessage());
@@ -84,9 +85,16 @@ public class GateController {
      * Use Case: Confirm Gate Out
      */
     @GetMapping("/out")
-    public String gateOutForm(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String gateOutForm(@RequestParam(value = "booking", required = false) String booking,
+                              @AuthenticationPrincipal UserDetails userDetails,
+                              Model model) {
         if (userDetails != null) {
             model.addAttribute("currentUser", userService.findByUsername(userDetails.getUsername()));
+        }
+        if (booking != null && !booking.trim().isEmpty()) {
+            appointmentService.findByBookingNumber(booking.trim()).ifPresent(app -> {
+                model.addAttribute("app", app);
+            });
         }
         model.addAttribute("inYardContainers", containerService.findAll().stream()
                 .filter(c -> c.getCurrentStatus() == Container.TrackingStatus.IN_YARD)
@@ -99,13 +107,14 @@ public class GateController {
                                  @RequestParam("sealNumber") String sealNumber,
                                  @RequestParam(value = "condition", defaultValue = "GOOD") Container.Condition condition,
                                  @RequestParam("licensePlate") String licensePlate,
+                                 @RequestParam("customsClearanceCode") String customsClearanceCode,
                                  @AuthenticationPrincipal UserDetails userDetails,
                                  RedirectAttributes redirectAttributes) {
         try {
             String operatorName = userDetails != null ? userDetails.getUsername() : "Gate Operator";
-            gateService.confirmGateOut(containerNumber, sealNumber, condition, licensePlate, operatorName);
+            gateService.confirmGateOut(containerNumber, sealNumber, condition, licensePlate, customsClearanceCode, operatorName);
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Xác nhận xe " + licensePlate + " chở cont " + containerNumber + " xuất bãi (Gate Out) thành công!");
+                    "Xác nhận xe " + licensePlate + " chở cont " + containerNumber + " (Giấy thông quan HQ: " + customsClearanceCode.toUpperCase() + ") xuất bãi (Gate Out) thành công!");
             return "redirect:/gate";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi Gate Out: " + e.getMessage());

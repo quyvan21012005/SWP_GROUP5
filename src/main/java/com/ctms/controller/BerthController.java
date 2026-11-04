@@ -39,13 +39,29 @@ public class BerthController {
     @PostMapping("/assign")
     public String assignVesselToBerth(@RequestParam("vesselId") Long vesselId,
                                       @RequestParam("berthId") Long berthId,
+                                      @RequestParam(value = "customsClearanceCode", required = false) String customsClearanceCode,
                                       RedirectAttributes redirectAttributes) {
         try {
-            berthService.assignVesselToBerth(vesselId, berthId);
+            berthService.assignVesselToBerth(vesselId, berthId, customsClearanceCode);
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Phân bổ tàu vào cầu bến thành công! Trạng thái cầu bến & tàu đã tự động cập nhật.");
+                    "Đã xác minh Giấy thông quan Hải quan và phân bổ tàu vào cầu bến thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi phân bổ bến: " + e.getMessage());
+        }
+        return "redirect:/berths";
+    }
+
+    @PostMapping("/customs")
+    public String updateVesselCustoms(@RequestParam("vesselId") Long vesselId,
+                                      @RequestParam("customsClearanceCode") String customsClearanceCode,
+                                      @RequestParam(value = "cleared", defaultValue = "true") boolean cleared,
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            Vessel v = berthService.updateVesselCustomsClearance(vesselId, customsClearanceCode, cleared);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Đã cập nhật Giấy thông quan Hải quan (" + v.getCustomsClearanceCode() + ") cho tàu " + v.getName() + "!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi cập nhật thông quan: " + e.getMessage());
         }
         return "redirect:/berths";
     }

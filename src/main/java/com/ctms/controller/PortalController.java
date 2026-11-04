@@ -81,6 +81,20 @@ public class PortalController {
         return "portal/truck-driver";
     }
 
+    @PostMapping("/shipping-line/vessel-customs")
+    public String updateVesselCustoms(@RequestParam("vesselId") Long vesselId,
+                                      @RequestParam("customsClearanceCode") String customsClearanceCode,
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            Vessel v = berthService.updateVesselCustomsClearance(vesselId, customsClearanceCode, true);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Đã khai báo Giấy thông quan Hải quan (" + v.getCustomsClearanceCode() + ") cho tàu " + v.getName() + " thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khai báo thông quan tàu: " + e.getMessage());
+        }
+        return "redirect:/portal/shipping-line";
+    }
+
     @PostMapping("/driver/book-appointment")
     public String bookAppointment(@RequestParam("appointmentType") Appointment.AppointmentType type,
                                   @RequestParam("bookingNumber") String bookingNumber,
@@ -88,6 +102,7 @@ public class PortalController {
                                   @RequestParam("licensePlate") String licensePlate,
                                   @RequestParam("phone") String phone,
                                   @RequestParam("appointmentTime") String appointmentTimeStr,
+                                  @RequestParam("customsClearanceCode") String customsClearanceCode,
                                   @RequestParam(value = "sealNumber", required = false) String sealNumber,
                                   @RequestParam(value = "notes", required = false) String notes,
                                   @AuthenticationPrincipal UserDetails userDetails,
@@ -121,7 +136,7 @@ public class PortalController {
             String cleanNotes = (notes != null && !notes.trim().isEmpty()) ? notes.trim() : null;
 
             Appointment savedAppointment = appointmentService.createAppointment(
-                    currentUser, type, cleanBooking, cleanContainer, cleanPlate, cleanPhone, parsedTime, cleanSeal, cleanNotes
+                    currentUser, type, cleanBooking, cleanContainer, cleanPlate, cleanPhone, parsedTime, cleanSeal, customsClearanceCode, cleanNotes
             );
 
             String slotCode = (savedAppointment.getContainer() != null && savedAppointment.getContainer().getCurrentSlot() != null)

@@ -44,6 +44,13 @@ public class Container {
     private String sealNumber; // Số niêm chì
     private Double grossWeightKg; // Tổng trọng lượng
 
+    @Column(name = "customs_clearance_code", length = 60)
+    private String customsClearanceCode; // Số tờ khai / Giấy thông quan Hải quan của Container
+
+    @Column(name = "customs_cleared")
+    @Builder.Default
+    private Boolean customsCleared = true; // Trạng thái thông quan Hải quan
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shipping_line_id", nullable = false)
     private ShippingLine shippingLine;

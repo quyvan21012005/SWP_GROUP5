@@ -40,14 +40,31 @@ public class BerthService {
 
     /**
      * Use Case: Assign Vessel to Berth
+     * <<include>> Verify Vessel Customs Clearance
      * <<include>> Update Berth / Vessel Status
      */
     @Transactional
     public void assignVesselToBerth(Long vesselId, Long berthId) {
+        assignVesselToBerth(vesselId, berthId, null);
+    }
+
+    @Transactional
+    public void assignVesselToBerth(Long vesselId, Long berthId, String customsClearanceCode) {
         Vessel vessel = vesselRepository.findById(vesselId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tàu ID: " + vesselId));
         Berth berth = berthRepository.findById(berthId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy cầu bến ID: " + berthId));
+
+        if (customsClearanceCode != null && !customsClearanceCode.trim().isEmpty()) {
+            vessel.setCustomsClearanceCode(customsClearanceCode.trim().toUpperCase());
+            vessel.setCustomsCleared(true);
+        }
+
+        if (vessel.getCustomsClearanceCode() == null || vessel.getCustomsClearanceCode().trim().isEmpty()
+                || Boolean.FALSE.equals(vessel.getCustomsCleared())) {
+            throw new IllegalStateException("Từ chối cập cầu: Tàu " + vessel.getName() +
+                    " chưa có Giấy thông quan hợp lệ của Hải quan!");
+        }
 
         if (berth.getStatus() == Berth.BerthStatus.OCCUPIED &&
                 berth.getCurrentVessel() != null &&
@@ -79,6 +96,12 @@ public class BerthService {
         Vessel vessel = vesselRepository.findById(vesselId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tàu ID: " + vesselId));
 
+        if (vessel.getCustomsClearanceCode() == null || vessel.getCustomsClearanceCode().trim().isEmpty()
+                || Boolean.FALSE.equals(vessel.getCustomsCleared())) {
+            throw new IllegalStateException("Từ chối rời bến: Tàu " + vessel.getName() +
+                    " chưa có Giấy thông quan của Hải quan!");
+        }
+
         if (vessel.getAssignedBerth() != null) {
             Berth berth = vessel.getAssignedBerth();
             berth.setStatus(Berth.BerthStatus.AVAILABLE);
@@ -89,6 +112,19 @@ public class BerthService {
         vessel.setStatus(Vessel.VesselStatus.DEPARTED);
         vessel.setAssignedBerth(null);
         vesselRepository.save(vessel);
+    }
+
+    @Transactional
+    public Vessel updateVesselCustomsClearance(Long vesselId, String customsClearanceCode, boolean cleared) {
+        Vessel vessel = vesselRepository.findById(vesselId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tàu ID: " + vesselId));
+        if (cleared && (customsClearanceCode == null || customsClearanceCode.trim().isEmpty())) {
+            throw new IllegalArgumentException("Vui lòng nhập mã số Giấy thông quan Hải quan cho tàu!");
+        }
+        vessel.setCustomsClearanceCode(customsClearanceCode != null && !customsClearanceCode.trim().isEmpty()
+                ? customsClearanceCode.trim().toUpperCase() : null);
+        vessel.setCustomsCleared(cleared && vessel.getCustomsClearanceCode() != null);
+        return vesselRepository.save(vessel);
     }
 
     @Transactional

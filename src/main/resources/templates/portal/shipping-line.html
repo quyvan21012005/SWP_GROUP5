@@ -30,13 +30,24 @@
                 </div>
             </div>
 
+            <!-- Alerts -->
+            <div th:if="${successMessage}" class="p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-medium flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                <span th:text="${successMessage}">Thành công!</span>
+            </div>
+            <div th:if="${errorMessage}" class="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-medium flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-circle-exclamation text-rose-600 text-base"></i>
+                <span th:text="${errorMessage}">Lỗi!</span>
+            </div>
+
             <!-- Vessels of this Shipping Line -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-5 border-b border-slate-100 flex items-center justify-between">
                     <div>
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-ship text-sky-600"></i> Đội Tàu Thuộc Hãng (Your Vessels)
+                            <i class="fa-solid fa-ship text-sky-600"></i> Đội Tàu Thuộc Hãng & Giấy Thông Quan Hải Quan (Your Vessels)
                         </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Tàu bắt buộc phải có Giấy thông quan của Hải quan trước khi cập cầu hoặc rời bến</p>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
@@ -47,6 +58,7 @@
                                 <th class="py-3 px-4 font-semibold">Số IMO</th>
                                 <th class="py-3 px-4 font-semibold">Sức chứa</th>
                                 <th class="py-3 px-4 font-semibold">ETA (Cập cảng)</th>
+                                <th class="py-3 px-4 font-semibold">Giấy Thông Quan Hải Quan</th>
                                 <th class="py-3 px-4 font-semibold">Cầu Bến Phân Bổ</th>
                                 <th class="py-3 px-4 font-semibold">Trạng Thái</th>
                             </tr>
@@ -57,6 +69,18 @@
                                 <td class="py-3 px-4 font-mono text-slate-500" th:text="${v.imoNumber}">IMO9619907</td>
                                 <td class="py-3 px-4 font-mono text-slate-700" th:text="${v.capacityTeu} + ' TEU'">18.270 TEU</td>
                                 <td class="py-3 px-4 font-mono text-slate-600" th:text="${#temporals.format(v.eta, 'dd/MM/yyyy HH:mm')}">--</td>
+                                <td class="py-3 px-4">
+                                    <form th:action="@{/portal/shipping-line/vessel-customs}" method="post" class="flex items-center gap-1.5">
+                                        <input type="hidden" name="vesselId" th:value="${v.id}">
+                                        <input type="text" name="customsClearanceCode" required
+                                               th:value="${v.customsClearanceCode}"
+                                               placeholder="Nhập mã HQ tàu..."
+                                               class="px-2.5 py-1 bg-emerald-50 border border-emerald-300 rounded-lg font-mono font-bold text-emerald-900 text-[11px] w-40 uppercase focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                        <button type="submit" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded-lg transition cursor-pointer">
+                                            <i class="fa-solid fa-file-shield"></i> Lưu HQ
+                                        </button>
+                                    </form>
+                                </td>
                                 <td class="py-3 px-4">
                                     <span th:if="${v.assignedBerth != null}" class="px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-bold text-[10px]" th:text="${v.assignedBerth.berthCode}">B-01</span>
                                     <span th:if="${v.assignedBerth == null}" class="text-slate-400 italic">Chưa xếp bến</span>
@@ -89,6 +113,7 @@
                                 <th class="py-3 px-4 font-semibold">Hàng / Rỗng</th>
                                 <th class="py-3 px-4 font-semibold">Tình trạng</th>
                                 <th class="py-3 px-4 font-semibold">Số Niêm Chì (Seal)</th>
+                                <th class="py-3 px-4 font-semibold">Giấy Thông Quan HQ</th>
                                 <th class="py-3 px-4 font-semibold">Vị trí Bãi</th>
                                 <th class="py-3 px-4 font-semibold">Trạng Thái</th>
                             </tr>
@@ -103,6 +128,10 @@
                                     <span th:if="${c.condition.name() == 'DAMAGED'}" class="text-rose-600 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Hỏng hóc</span>
                                 </td>
                                 <td class="py-3 px-4 font-mono text-slate-700" th:text="${c.sealNumber}">SL-99881</td>
+                                <td class="py-3 px-4">
+                                    <span th:if="${c.customsClearanceCode != null}" class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono font-bold text-[10px]" th:text="${c.customsClearanceCode}">HQ-CONT-2026-001</span>
+                                    <span th:if="${c.customsClearanceCode == null}" class="text-rose-600 font-semibold text-[10px]">Chưa thông quan</span>
+                                </td>
                                 <td class="py-3 px-4">
                                     <span th:if="${c.currentSlot != null}" class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono font-bold text-[10px]" th:text="${c.currentSlot.slotCode}">A-01</span>
                                     <span th:if="${c.currentSlot == null}" class="text-slate-400 italic">--</span>

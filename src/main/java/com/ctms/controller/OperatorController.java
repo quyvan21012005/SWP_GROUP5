@@ -137,16 +137,25 @@ public class OperatorController {
      */
     @GetMapping("/gate/out")
     public String gateOut(@RequestParam(value = "container", required = false) String container,
+                          @RequestParam(value = "booking", required = false) String booking,
                           @AuthenticationPrincipal UserDetails userDetails,
                           Model model) {
         User currentUser = userDetails != null ? userService.findByUsername(userDetails.getUsername()) : null;
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("containerParam", container);
+        if (booking != null && !booking.trim().isEmpty()) {
+            appointmentService.findByBookingNumber(booking.trim()).ifPresent(app -> {
+                model.addAttribute("app", app);
+            });
+        }
         if (container != null && !container.trim().isEmpty()) {
             containerService.findByContainerNumber(container.trim()).ifPresent(c -> {
                 model.addAttribute("cont", c);
             });
         }
+        model.addAttribute("inYardContainers", containerService.findAll().stream()
+                .filter(c -> c.getCurrentStatus() == Container.TrackingStatus.IN_YARD)
+                .toList());
         return "gate/gate-out";
     }
 

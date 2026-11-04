@@ -59,7 +59,12 @@ public class AppointmentService {
                                          String phone,
                                          LocalDateTime appointmentTime,
                                          String sealNumber,
+                                         String customsClearanceCode,
                                          String notes) {
+        if (customsClearanceCode == null || customsClearanceCode.trim().isEmpty()) {
+            throw new IllegalArgumentException("Bắt buộc phải nhập Số Giấy thông quan của Hải quan để đặt lịch hẹn qua cổng!");
+        }
+        String cleanCustomsCode = customsClearanceCode.trim().toUpperCase();
         String cleanContainerNo = containerNumber != null ? containerNumber.toUpperCase().trim() : "CONT-" + System.currentTimeMillis();
         ShippingLine defaultShippingLine = shippingLineRepository.findAll().stream().findFirst().orElse(null);
 
@@ -81,11 +86,15 @@ public class AppointmentService {
                             .currentStatus(Container.TrackingStatus.EXPECTED)
                             .shippingLine(defaultShippingLine)
                             .sealNumber(sealNumber)
+                            .customsClearanceCode(cleanCustomsCode)
+                            .customsCleared(true)
                             .build());
 
             if (sealNumber != null && !sealNumber.trim().isEmpty()) {
                 linkedContainer.setSealNumber(sealNumber.trim().toUpperCase());
             }
+            linkedContainer.setCustomsClearanceCode(cleanCustomsCode);
+            linkedContainer.setCustomsCleared(true);
             linkedContainer = containerRepository.save(linkedContainer);
 
             if (targetSlot != null) {
@@ -99,6 +108,9 @@ public class AppointmentService {
             Optional<Container> existingContainerOpt = containerRepository.findByContainerNumber(cleanContainerNo);
             if (existingContainerOpt.isPresent()) {
                 linkedContainer = existingContainerOpt.get();
+                linkedContainer.setCustomsClearanceCode(cleanCustomsCode);
+                linkedContainer.setCustomsCleared(true);
+                linkedContainer = containerRepository.save(linkedContainer);
                 Optional<YardSlot> slotOpt = yardSlotRepository.findByContainer(linkedContainer);
                 if (slotOpt.isPresent()) {
                     assignedSlotCode = slotOpt.get().getSlotCode();
@@ -117,6 +129,8 @@ public class AppointmentService {
                         .currentStatus(Container.TrackingStatus.IN_YARD)
                         .shippingLine(defaultShippingLine)
                         .sealNumber(sealNumber != null && !sealNumber.trim().isEmpty() ? sealNumber.trim().toUpperCase() : "SL-IMP-882")
+                        .customsClearanceCode(cleanCustomsCode)
+                        .customsCleared(true)
                         .build();
                 linkedContainer = containerRepository.save(linkedContainer);
 
@@ -133,6 +147,7 @@ public class AppointmentService {
         if (!assignedSlotCode.isEmpty()) {
             fullNotes = (fullNotes.isEmpty() ? "" : fullNotes + " | ") + "Ô bãi chỉ định: " + assignedSlotCode;
         }
+        fullNotes = (fullNotes.isEmpty() ? "" : fullNotes + " | ") + "Giấy thông quan HQ: " + cleanCustomsCode;
 
         Appointment appointment = Appointment.builder()
                 .driver(driver)
@@ -144,6 +159,8 @@ public class AppointmentService {
                 .driverPhone(phone)
                 .appointmentTime(appointmentTime)
                 .sealNumber(sealNumber)
+                .customsClearanceCode(cleanCustomsCode)
+                .customsCleared(true)
                 .notes(fullNotes)
                 .status(Appointment.AppointmentStatus.CONFIRMED)
                 .build();

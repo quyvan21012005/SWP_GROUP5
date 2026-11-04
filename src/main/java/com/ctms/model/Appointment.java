@@ -46,6 +46,13 @@ public class Appointment {
 
     private String sealNumber;
 
+    @Column(name = "customs_clearance_code", length = 60)
+    private String customsClearanceCode; // Số tờ khai / Giấy thông quan Hải quan
+
+    @Column(name = "customs_cleared")
+    @Builder.Default
+    private Boolean customsCleared = true; // Trạng thái đã có giấy thông quan Hải quan
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default

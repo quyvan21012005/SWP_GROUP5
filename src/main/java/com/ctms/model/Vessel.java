@@ -43,6 +43,13 @@ public class Vessel {
     @JoinColumn(name = "berth_id")
     private Berth assignedBerth;
 
+    @Column(name = "customs_clearance_code", length = 60)
+    private String customsClearanceCode; // Số giấy phép thông quan Hải quan tàu biển
+
+    @Column(name = "customs_cleared")
+    @Builder.Default
+    private Boolean customsCleared = true; // Đã được Hải quan phê duyệt thông quan
+
     public enum VesselStatus {
         SCHEDULED("Đã lên lịch"),
         BERTHED("Đang cập bến"),

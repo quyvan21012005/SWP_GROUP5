@@ -93,6 +93,8 @@ CREATE TABLE dbo.vessels (
     eta DATETIME2 NULL,
     etd DATETIME2 NULL,
     berth_id BIGINT NULL,
+    customs_clearance_code NVARCHAR(60) NULL, -- Số giấy thông quan Hải quan tàu biển
+    customs_cleared BIT NOT NULL DEFAULT 1,   -- Đã thông quan Hải quan
     CONSTRAINT fk_vessel_shipping_line FOREIGN KEY (shipping_line_id) REFERENCES dbo.shipping_lines(id),
     CONSTRAINT fk_vessel_berth FOREIGN KEY (berth_id) REFERENCES dbo.berths(id) ON DELETE SET NULL
 );
@@ -123,6 +125,8 @@ CREATE TABLE dbo.containers (
     shipping_line_id BIGINT NOT NULL,
     gate_in_time DATETIME2 NULL,
     gate_out_time DATETIME2 NULL,
+    customs_clearance_code NVARCHAR(60) NULL, -- Số giấy thông quan Hải quan Container
+    customs_cleared BIT NOT NULL DEFAULT 1,
     CONSTRAINT fk_container_shipping_line FOREIGN KEY (shipping_line_id) REFERENCES dbo.shipping_lines(id)
 );
 GO
@@ -156,6 +160,8 @@ CREATE TABLE dbo.appointments (
     driver_phone NVARCHAR(255) NULL,
     appointment_time DATETIME2 NOT NULL,
     seal_number NVARCHAR(255) NULL,
+    customs_clearance_code NVARCHAR(60) NULL, -- Số tờ khai / Giấy thông quan Hải quan của Tài xế
+    customs_cleared BIT NOT NULL DEFAULT 1,
     status NVARCHAR(50) NOT NULL DEFAULT 'CONFIRMED', -- PENDING, CONFIRMED, CHECKED_IN, COMPLETED, CANCELLED
     notes NVARCHAR(MAX) NULL,
     CONSTRAINT fk_appointment_driver FOREIGN KEY (driver_id) REFERENCES dbo.users(id),
@@ -212,10 +218,10 @@ GO
 
 -- 4.4. Tàu cập cảng (Vessels)
 SET IDENTITY_INSERT dbo.vessels ON;
-INSERT INTO dbo.vessels (id, name, imo_number, shipping_line_id, capacity_teu, length_meters, status, eta, etd, berth_id) VALUES
-(1, 'MSC OSCAR', 'IMO9703291', 2, 19224, 395.4, 'BERTHED', DATEADD(HOUR, -8, GETDATE()), DATEADD(HOUR, 16, GETDATE()), 1),
-(2, 'MAERSK MC-KINNEY MOLLER', 'IMO9619907', 1, 18270, 399.0, 'SCHEDULED', DATEADD(DAY, 1, GETDATE()), DATEADD(DAY, 2, GETDATE()), NULL),
-(3, 'CMA CGM ANTOINE DE SAINT EXUPERY', 'IMO9776418', 3, 20600, 400.0, 'SCHEDULED', DATEADD(DAY, 2, GETDATE()), DATEADD(DAY, 3, GETDATE()), NULL);
+INSERT INTO dbo.vessels (id, name, imo_number, shipping_line_id, capacity_teu, length_meters, status, eta, etd, berth_id, customs_clearance_code, customs_cleared) VALUES
+(1, 'MSC OSCAR', 'IMO9703291', 2, 19224, 395.4, 'BERTHED', DATEADD(HOUR, -8, GETDATE()), DATEADD(HOUR, 16, GETDATE()), 1, 'HQ-SHIP-2026-001', 1),
+(2, 'MAERSK MC-KINNEY MOLLER', 'IMO9619907', 1, 18270, 399.0, 'SCHEDULED', DATEADD(DAY, 1, GETDATE()), DATEADD(DAY, 2, GETDATE()), NULL, 'HQ-SHIP-2026-002', 1),
+(3, 'CMA CGM ANTOINE DE SAINT EXUPERY', 'IMO9776418', 3, 20600, 400.0, 'SCHEDULED', DATEADD(DAY, 2, GETDATE()), DATEADD(DAY, 3, GETDATE()), NULL, 'HQ-SHIP-2026-003', 1);
 SET IDENTITY_INSERT dbo.vessels OFF;
 GO
 
@@ -282,15 +288,15 @@ GO
 
 -- 4.6. Danh sách Container mẫu
 SET IDENTITY_INSERT dbo.containers ON;
-INSERT INTO dbo.containers (id, container_number, iso_type, container_type, cargo_status, condition, current_status, seal_number, gross_weight_kg, shipping_line_id, gate_in_time, gate_out_time) VALUES
-(1, 'MSKU9182736', '40HC', 'DRY', 'FULL', 'GOOD', 'IN_YARD', 'SL-99881', 28400.0, 1, DATEADD(HOUR, -4, GETDATE()), NULL),
-(2, 'MSKU3451290', '20GP', 'REEFER', 'FULL', 'GOOD', 'IN_YARD', 'SL-99882', 22100.0, 1, DATEADD(HOUR, -3, GETDATE()), NULL),
-(3, 'MSCU1122334', '40HC', 'DRY', 'EMPTY', 'GOOD', 'IN_YARD', 'SL-77661', 3800.0, 2, DATEADD(HOUR, -2, GETDATE()), NULL),
-(4, 'MSCU5566778', '40HC', 'REEFER', 'FULL', 'DAMAGED', 'IN_YARD', 'SL-77662', 29100.0, 2, DATEADD(HOUR, -1, GETDATE()), NULL),
-(5, 'CMAU9988776', '20GP', 'DRY', 'FULL', 'GOOD', 'IN_YARD', 'SL-55441', 21500.0, 3, DATEADD(MINUTE, -30, GETDATE()), NULL),
-(6, 'CMAU3344556', '45HC', 'DRY', 'EMPTY', 'GOOD', 'IN_YARD', 'SL-55442', 4200.0, 3, DATEADD(MINUTE, -15, GETDATE()), NULL),
-(7, 'MSKU7711223', '40HC', 'DRY', 'FULL', 'GOOD', 'GATE_IN', 'SL-99883', 27800.0, 1, DATEADD(MINUTE, -10, GETDATE()), NULL),
-(8, 'MSCU9900112', '20GP', 'REEFER', 'EMPTY', 'GOOD', 'EXPECTED', 'SL-77663', 2900.0, 2, NULL, NULL);
+INSERT INTO dbo.containers (id, container_number, iso_type, container_type, cargo_status, condition, current_status, seal_number, gross_weight_kg, shipping_line_id, gate_in_time, gate_out_time, customs_clearance_code, customs_cleared) VALUES
+(1, 'MSKU9182736', '40HC', 'DRY', 'FULL', 'GOOD', 'IN_YARD', 'SL-99881', 28400.0, 1, DATEADD(HOUR, -4, GETDATE()), NULL, 'HQ-CONT-2026-001', 1),
+(2, 'MSKU3451290', '20GP', 'REEFER', 'FULL', 'GOOD', 'IN_YARD', 'SL-99882', 22100.0, 1, DATEADD(HOUR, -3, GETDATE()), NULL, 'HQ-CONT-2026-002', 1),
+(3, 'MSCU1122334', '40HC', 'DRY', 'EMPTY', 'GOOD', 'IN_YARD', 'SL-77661', 3800.0, 2, DATEADD(HOUR, -2, GETDATE()), NULL, 'HQ-CONT-2026-003', 1),
+(4, 'MSCU5566778', '40HC', 'REEFER', 'FULL', 'DAMAGED', 'IN_YARD', 'SL-77662', 29100.0, 2, DATEADD(HOUR, -1, GETDATE()), NULL, 'HQ-CONT-2026-004', 1),
+(5, 'CMAU9988776', '20GP', 'DRY', 'FULL', 'GOOD', 'IN_YARD', 'SL-55441', 21500.0, 3, DATEADD(MINUTE, -30, GETDATE()), NULL, 'HQ-CONT-2026-005', 1),
+(6, 'CMAU3344556', '45HC', 'DRY', 'EMPTY', 'GOOD', 'IN_YARD', 'SL-55442', 4200.0, 3, DATEADD(MINUTE, -15, GETDATE()), NULL, 'HQ-CONT-2026-006', 1),
+(7, 'MSKU7711223', '40HC', 'DRY', 'FULL', 'GOOD', 'GATE_IN', 'SL-99883', 27800.0, 1, DATEADD(MINUTE, -10, GETDATE()), NULL, 'HQ-CONT-2026-007', 1),
+(8, 'MSCU9900112', '20GP', 'REEFER', 'EMPTY', 'GOOD', 'EXPECTED', 'SL-77663', 2900.0, 2, NULL, NULL, 'HQ-CONT-2026-008', 1);
 SET IDENTITY_INSERT dbo.containers OFF;
 GO
 
@@ -305,9 +311,9 @@ GO
 
 -- 4.7. Phiếu hẹn tài xế qua cổng (Appointments)
 SET IDENTITY_INSERT dbo.appointments ON;
-INSERT INTO dbo.appointments (id, driver_id, appointment_type, booking_number, container_number, container_id, license_plate, driver_phone, appointment_time, seal_number, status, notes) VALUES
-(1, 4, 'IMPORT_PICKUP', 'BK-IMP-2026-001', 'MSKU9182736', 1, '51C-889.92', '0904567890', DATEADD(HOUR, 3, GETDATE()), 'SL-99881', 'CONFIRMED', N'Xe tải hẹn đến lấy cont nhập khẩu số MSKU9182736'),
-(2, 4, 'EXPORT_DROPOFF', 'BK-EXP-2026-002', 'MSKU7711223', 7, '51D-123.45', '0904567890', DATEADD(MINUTE, -30, GETDATE()), 'SL-99883', 'CHECKED_IN', N'Hạ cont xuất khẩu đi tàu MSC Oscar');
+INSERT INTO dbo.appointments (id, driver_id, appointment_type, booking_number, container_number, container_id, license_plate, driver_phone, appointment_time, seal_number, customs_clearance_code, customs_cleared, status, notes) VALUES
+(1, 4, 'IMPORT_PICKUP', 'BK-IMP-2026-001', 'MSKU9182736', 1, '51C-889.92', '0904567890', DATEADD(HOUR, 3, GETDATE()), 'SL-99881', 'HQ-VNACCS-2026-001', 1, 'CONFIRMED', N'Xe tải hẹn đến lấy cont nhập khẩu số MSKU9182736 | Giấy thông quan HQ: HQ-VNACCS-2026-001'),
+(2, 4, 'EXPORT_DROPOFF', 'BK-EXP-2026-002', 'MSKU7711223', 7, '51D-123.45', '0904567890', DATEADD(MINUTE, -30, GETDATE()), 'SL-99883', 'HQ-VNACCS-2026-002', 1, 'CHECKED_IN', N'Hạ cont xuất khẩu đi tàu MSC Oscar | Giấy thông quan HQ: HQ-VNACCS-2026-002');
 SET IDENTITY_INSERT dbo.appointments OFF;
 GO
 

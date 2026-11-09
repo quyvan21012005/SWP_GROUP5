@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface YardSlotRepository extends JpaRepository<YardSlot, Long> {
     List<YardSlot> findByBlockOrderBySlotIndexAsc(YardSlot.YardBlock block);
+    List<YardSlot> findByBlockAndContainerIsNullOrderBySlotIndexAsc(YardSlot.YardBlock block);
     Optional<YardSlot> findBySlotCode(String slotCode);
     Optional<YardSlot> findByContainer(Container container);
     List<YardSlot> findByContainerIsNull();

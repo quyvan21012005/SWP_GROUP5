@@ -55,6 +55,7 @@ public class AppointmentService {
                                          Appointment.AppointmentType type,
                                          String bookingNumber,
                                          String containerNumber,
+                                         Container.ContainerType requestedCargoType,
                                          String licensePlate,
                                          String phone,
                                          LocalDateTime appointmentTime,
@@ -67,20 +68,23 @@ public class AppointmentService {
         String cleanCustomsCode = customsClearanceCode.trim().toUpperCase();
         String cleanContainerNo = containerNumber != null ? containerNumber.toUpperCase().trim() : "CONT-" + System.currentTimeMillis();
         ShippingLine defaultShippingLine = shippingLineRepository.findAll().stream().findFirst().orElse(null);
+        Container.ContainerType effectiveType = requestedCargoType != null ? requestedCargoType : Container.ContainerType.DRY;
+        YardSlot.YardBlock preferredBlock = effectiveType.getPreferredBlock();
 
         Container linkedContainer;
         String assignedSlotCode = "";
 
         if (type == Appointment.AppointmentType.EXPORT_DROPOFF) {
-            // Hạ cont Xuất: Tạo container và tự động gán vào ô bãi trống đầu tiên (Pre-allocate)
+            // Hạ cont Xuất: Tự động phân khu thông minh (Dry -> Khu A, Reefer -> Khu B, Hazmat/OOG/Tank -> Khu C)
+            List<YardSlot> zoneSlots = yardSlotRepository.findByBlockAndContainerIsNullOrderBySlotIndexAsc(preferredBlock);
             List<YardSlot> emptySlots = yardSlotRepository.findByContainerIsNull();
-            YardSlot targetSlot = emptySlots.isEmpty() ? null : emptySlots.get(0);
+            YardSlot targetSlot = !zoneSlots.isEmpty() ? zoneSlots.get(0) : (emptySlots.isEmpty() ? null : emptySlots.get(0));
 
             linkedContainer = containerRepository.findByContainerNumber(cleanContainerNo)
                     .orElseGet(() -> Container.builder()
                             .containerNumber(cleanContainerNo)
                             .isoType("40HC")
-                            .containerType(Container.ContainerType.DRY)
+                            .containerType(effectiveType)
                             .cargoStatus(Container.CargoStatus.FULL)
                             .condition(Container.Condition.GOOD)
                             .currentStatus(Container.TrackingStatus.EXPECTED)
@@ -90,6 +94,9 @@ public class AppointmentService {
                             .customsCleared(true)
                             .build());
 
+            if (requestedCargoType != null) {
+                linkedContainer.setContainerType(requestedCargoType);
+            }
             if (sealNumber != null && !sealNumber.trim().isEmpty()) {
                 linkedContainer.setSealNumber(sealNumber.trim().toUpperCase());
             }
@@ -104,7 +111,7 @@ public class AppointmentService {
                 assignedSlotCode = targetSlot.getSlotCode();
             }
         } else {
-            // Lấy cont Nhập: Tìm cont đã có trong bãi hoặc xếp vào 1 ô bãi để tài xế đến lấy
+            // Lấy cont Nhập: Tìm cont đã có trong bãi hoặc xếp vào khu vực bãi tương ứng
             Optional<Container> existingContainerOpt = containerRepository.findByContainerNumber(cleanContainerNo);
             if (existingContainerOpt.isPresent()) {
                 linkedContainer = existingContainerOpt.get();
@@ -117,13 +124,14 @@ public class AppointmentService {
                     linkedContainer.setCurrentSlot(slotOpt.get());
                 }
             } else {
+                List<YardSlot> zoneSlots = yardSlotRepository.findByBlockAndContainerIsNullOrderBySlotIndexAsc(preferredBlock);
                 List<YardSlot> emptySlots = yardSlotRepository.findByContainerIsNull();
-                YardSlot targetSlot = emptySlots.isEmpty() ? null : emptySlots.get(0);
+                YardSlot targetSlot = !zoneSlots.isEmpty() ? zoneSlots.get(0) : (emptySlots.isEmpty() ? null : emptySlots.get(0));
 
                 linkedContainer = Container.builder()
                         .containerNumber(cleanContainerNo)
                         .isoType("40HC")
-                        .containerType(Container.ContainerType.DRY)
+                        .containerType(effectiveType)
                         .cargoStatus(Container.CargoStatus.FULL)
                         .condition(Container.Condition.GOOD)
                         .currentStatus(Container.TrackingStatus.IN_YARD)
@@ -143,9 +151,10 @@ public class AppointmentService {
             }
         }
 
-        // Tính phí dịch vụ cảng động: Phí nâng hạ cơ bản + Phụ phí Cont lạnh (Reefer) + Phí lưu bãi quá hạn (> 2 ngày)
+        // Tính phí dịch vụ cảng động: Phí nâng hạ cơ bản + Phụ phí loại hàng đặc biệt (Lạnh/Cháy nổ/Quá khổ/Bồn) + Phí lưu bãi quá hạn (> 2 ngày)
         int baseFee = (type == Appointment.AppointmentType.IMPORT_PICKUP) ? 450000 : 400000;
-        int reeferSurcharge = (linkedContainer != null && linkedContainer.getContainerType() == Container.ContainerType.REEFER) ? 150000 : 0;
+        int specialCargoSurcharge = (linkedContainer != null && linkedContainer.getContainerType() != null)
+                ? linkedContainer.getContainerType().getSurcharge() : 0;
         int demurrageFee = 0;
         if (linkedContainer != null && linkedContainer.getGateInTime() != null) {
             long daysInYard = java.time.temporal.ChronoUnit.DAYS.between(linkedContainer.getGateInTime(), LocalDateTime.now());
@@ -153,15 +162,16 @@ public class AppointmentService {
                 demurrageFee = (int) ((daysInYard - 2) * 50000);
             }
         }
-        int feeAmount = baseFee + reeferSurcharge + demurrageFee;
+        int feeAmount = baseFee + specialCargoSurcharge + demurrageFee;
 
         String fullNotes = (notes != null && !notes.trim().isEmpty()) ? notes.trim() : "";
         if (!assignedSlotCode.isEmpty()) {
             fullNotes = (fullNotes.isEmpty() ? "" : fullNotes + " | ") + "Ô bãi chỉ định: " + assignedSlotCode;
         }
         fullNotes = (fullNotes.isEmpty() ? "" : fullNotes + " | ") + "Giấy thông quan HQ: " + cleanCustomsCode;
-        if (reeferSurcharge > 0) {
-            fullNotes += " | Phụ phí Cont Lạnh: +150.000đ";
+        if (specialCargoSurcharge > 0 && linkedContainer != null) {
+            fullNotes += " | Phụ phí " + linkedContainer.getContainerType().getDisplayName() + ": +"
+                    + String.format("%,d", specialCargoSurcharge).replace(',', '.') + "đ";
         }
         if (demurrageFee > 0) {
             fullNotes += " | Phí lưu bãi quá hạn: +" + String.format("%,d", demurrageFee).replace(',', '.') + "đ";

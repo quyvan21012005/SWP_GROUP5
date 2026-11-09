@@ -81,13 +81,17 @@ public class ContainerService {
         ShippingLine line = shippingLineRepository.findById(shippingLineId)
                 .orElseGet(() -> shippingLineRepository.findAll().stream().findFirst().orElse(null));
 
-        List<YardSlot> emptySlots = yardSlotRepository.findByContainerIsNull();
-        YardSlot assignedSlot = emptySlots.isEmpty() ? null : emptySlots.get(0);
+        Container.ContainerType effectiveType = containerType != null ? containerType : Container.ContainerType.DRY;
+        YardSlot.YardBlock targetBlock = effectiveType.getPreferredBlock();
+        List<YardSlot> zoneEmptySlots = yardSlotRepository.findByBlockAndContainerIsNullOrderBySlotIndexAsc(targetBlock);
+        List<YardSlot> fallbackEmptySlots = yardSlotRepository.findByContainerIsNull();
+        YardSlot assignedSlot = !zoneEmptySlots.isEmpty() ? zoneEmptySlots.get(0)
+                : (fallbackEmptySlots.isEmpty() ? null : fallbackEmptySlots.get(0));
 
         Container container = Container.builder()
                 .containerNumber(cleanContNo)
                 .isoType(isoType != null && !isoType.isBlank() ? isoType.trim().toUpperCase() : "40HC")
-                .containerType(containerType != null ? containerType : Container.ContainerType.DRY)
+                .containerType(effectiveType)
                 .cargoStatus(cargoStatus != null ? cargoStatus : Container.CargoStatus.FULL)
                 .condition(Container.Condition.GOOD)
                 .currentStatus(assignedSlot != null ? Container.TrackingStatus.IN_YARD : Container.TrackingStatus.EXPECTED)

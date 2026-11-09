@@ -254,12 +254,24 @@
                         </button>
                     </div>
                     <form th:action="@{/portal/driver/book-appointment}" method="post" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Loại Nghiệp Vụ Giao Nhận *</label>
-                            <select name="appointmentType" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none">
-                                <option value="IMPORT_PICKUP">Lấy hàng Nhập khẩu (Import Pickup) - Phí nâng: 450.000 VNĐ</option>
-                                <option value="EXPORT_DROPOFF">Hạ container Xuất khẩu (Export Drop-off) - Phí hạ: 400.000 VNĐ</option>
-                            </select>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Loại Nghiệp Vụ Giao Nhận *</label>
+                                <select name="appointmentType" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                                    <option value="IMPORT_PICKUP">Lấy cont Nhập (450.000đ)</option>
+                                    <option value="EXPORT_DROPOFF">Hạ cont Xuất (400.000đ)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phân Loại Hàng Hóa (Tự động phân khu) *</label>
+                                <select name="containerType" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                                    <option value="DRY">Hàng Khô (Khu A • +0đ)</option>
+                                    <option value="REEFER">❄️ Hàng Lạnh (Khu B • +150.000đ)</option>
+                                    <option value="HAZMAT">🔥 Hàng Cháy Nổ (Khu C • +300.000đ)</option>
+                                    <option value="OOG">🏗️ Quá Khổ OOG (Khu C • +250.000đ)</option>
+                                    <option value="TANK">🛢️ Bồn Lỏng Tank (Khu C • +200.000đ)</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>

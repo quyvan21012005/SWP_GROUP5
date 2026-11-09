@@ -64,6 +64,7 @@ public class YardService {
         if (targetSlot.isOccupied()) {
             throw new IllegalStateException("Ô bãi " + targetSlot.getSlotCode() + " đã có container!");
         }
+        validateZoneSafety(container, targetSlot);
 
         // Kiểm tra xem container có đang ở ô khác không
         Optional<YardSlot> currentSlotOpt = yardSlotRepository.findByContainer(container);
@@ -109,6 +110,7 @@ public class YardService {
         }
 
         Container container = fromSlot.getContainer();
+        validateZoneSafety(container, toSlot);
         fromSlot.setContainer(null);
         toSlot.setContainer(container);
 
@@ -126,5 +128,26 @@ public class YardService {
                 .notes("Đảo chuyển container giữa các vị trí bãi")
                 .build();
         movementHistoryRepository.save(history);
+    }
+
+    /**
+     * Quy tắc An toàn Quy hoạch Bãi Cảng (IMDG & Smart Zoning):
+     * - Hàng Cháy Nổ (HAZMAT) bắt buộc cách ly tại Khu C (BLOCK_C), nghiêm cấm xếp vào Khu A/B.
+     * - Hàng Đông Lạnh (REEFER) không được xếp chung vào Khu C (Khu cách ly cháy nổ).
+     */
+    private void validateZoneSafety(Container container, YardSlot targetSlot) {
+        if (container == null || container.getContainerType() == null || targetSlot == null) {
+            return;
+        }
+        if (container.getContainerType() == Container.ContainerType.HAZMAT
+                && targetSlot.getBlock() != YardSlot.YardBlock.BLOCK_C) {
+            throw new IllegalStateException("CẢNH BÁO AN TOÀN PCCC (IMDG): Container Hàng Cháy Nổ (" + container.getContainerNumber()
+                    + ") bắt buộc phải cách ly tại Khu C (Block C), nghiêm cấm xếp vào " + targetSlot.getBlock().getDisplayName() + "!");
+        }
+        if (container.getContainerType() == Container.ContainerType.REEFER
+                && targetSlot.getBlock() == YardSlot.YardBlock.BLOCK_C) {
+            throw new IllegalStateException("CẢNH BÁO AN TOÀN ĐIỆN LẠNH: Container Đông Lạnh (" + container.getContainerNumber()
+                    + ") cần nguồn điện 3 pha tại Khu B, không được xếp vào Khu C (Khu cách ly cháy nổ)!");
+        }
     }
 }

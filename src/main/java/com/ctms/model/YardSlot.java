@@ -34,9 +34,9 @@ public class YardSlot {
     }
 
     public enum YardBlock {
-        BLOCK_A("Khu A (Block A)"),
-        BLOCK_B("Khu B (Block B)"),
-        BLOCK_C("Khu C (Block C)");
+        BLOCK_A("Khu A - Hàng Khô (Dry Cargo)"),
+        BLOCK_B("Khu B - Trạm Điện Lạnh (Reefer)"),
+        BLOCK_C("Khu C - Cách Ly Cháy Nổ & Đặc Biệt (Hazmat/OOG/Tank)");
 
         private final String displayName;
 

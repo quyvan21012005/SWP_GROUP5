@@ -28,11 +28,12 @@
             <!-- Legend & Stats -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div class="flex items-center gap-4 flex-wrap">
-                    <span class="font-bold text-slate-600 uppercase tracking-wider">Chú thích trạng thái:</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-emerald-50 border border-emerald-400"></span> Ô trống (Available)</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-sky-600"></span> Cont Khô (Dry)</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-cyan-500"></span> Cont Lạnh (Reefer <i class="fa-solid fa-snowflake text-[10px]"></i>)</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-rose-500"></span> Hỏng hóc (Damaged <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>)</span>
+                    <span class="font-bold text-slate-600 uppercase tracking-wider">Chú thích phân khu &amp; loại hàng:</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-emerald-50 border border-emerald-400"></span> Ô trống</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-sky-600"></span> Hàng Khô (Dry - Khu A)</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-cyan-500"></span> Hàng Lạnh (Reefer <i class="fa-solid fa-snowflake text-[10px]"></i> - Khu B)</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-amber-500"></span> Cháy Nổ / Quá Khổ / Bồn (Hazmat/OOG/Tank <i class="fa-solid fa-fire-flame-curved text-[10px]"></i> - Khu C)</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-rose-500"></span> Hỏng vỏ (Damaged <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>)</span>
                 </div>
                 <div class="text-slate-600 font-medium">
                     Tỷ lệ lấp đầy: <b class="text-emerald-700" th:text="${occupiedCount}">6</b> / <span th:text="${totalCount}">48</span> Slots
@@ -48,19 +49,20 @@
                         <div class="flex items-center gap-2">
                             <span class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm">A</span>
                             <div>
-                                <h3 class="font-bold text-sm text-slate-800">KHỐI A (Block A)</h3>
-                                <p class="text-[10px] text-slate-400">16 Slots (A-01 &rarr; A-16)</p>
+                                <h3 class="font-bold text-sm text-slate-800">KHỐI A — Khu Hàng Khô (Dry)</h3>
+                                <p class="text-[10px] text-slate-400">16 Slots (A-01 &rarr; A-16) • Hàng bách hóa tiêu chuẩn</p>
                             </div>
                         </div>
                     </div>
                     <div class="grid grid-cols-4 gap-2.5">
                         <div th:each="slot : ${blockASlots}"
                              class="rounded-xl p-2 min-h-[90px] border flex flex-col justify-between transition transform hover:-translate-y-0.5 hover:shadow cursor-pointer"
-                             th:classappend="${slot.occupied} ? (${slot.container.condition.name() == 'DAMAGED'} ? 'bg-rose-50 border-rose-400' : (${slot.container.containerType.name() == 'REEFER'} ? 'bg-cyan-50 border-cyan-400' : 'bg-sky-50 border-sky-400')) : 'bg-slate-50/70 border-slate-200 border-dashed hover:border-emerald-400'">
+                             th:classappend="${slot.occupied} ? (${slot.container.condition.name() == 'DAMAGED'} ? 'bg-rose-50 border-rose-400' : (${slot.container.containerType.name() == 'REEFER'} ? 'bg-cyan-50 border-cyan-400' : (${slot.container.containerType.name() != 'DRY'} ? 'bg-amber-50 border-amber-400' : 'bg-sky-50 border-sky-400'))) : 'bg-slate-50/70 border-slate-200 border-dashed hover:border-emerald-400'">
                             <div class="flex items-center justify-between text-[11px]">
                                 <span class="font-mono font-bold" th:classappend="${slot.occupied} ? 'text-slate-800' : 'text-slate-400'" th:text="${slot.slotCode}">A-01</span>
                                 <span th:if="${!slot.occupied}" class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-700 font-semibold">Trống</span>
                                 <span th:if="${slot.occupied and slot.container.containerType.name() == 'REEFER'}" class="text-cyan-600"><i class="fa-solid fa-snowflake text-[10px]"></i></span>
+                                <span th:if="${slot.occupied and slot.container.containerType.name() == 'HAZMAT'}" class="text-rose-600 font-bold"><i class="fa-solid fa-fire-flame-curved text-[10px]"></i></span>
                             </div>
                             <div th:if="${slot.occupied}" class="my-1">
                                 <a th:href="@{'/containers/' + ${slot.container.id}}" class="text-[11px] font-bold font-mono text-slate-800 hover:text-sky-600 block truncate" th:text="${slot.container.containerNumber}">MSKU9182</a>
@@ -83,8 +85,8 @@
                         <div class="flex items-center gap-2">
                             <span class="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 font-bold flex items-center justify-center text-sm">B</span>
                             <div>
-                                <h3 class="font-bold text-sm text-slate-800">KHỐI B (Block B)</h3>
-                                <p class="text-[10px] text-slate-400">16 Slots (B-01 &rarr; B-16)</p>
+                                <h3 class="font-bold text-sm text-slate-800">KHỐI B — Trạm Điện Hàng Lạnh (Reefer)</h3>
+                                <p class="text-[10px] text-slate-400">16 Slots (B-01 &rarr; B-16) • Cấp nguồn điện lạnh 3 pha</p>
                             </div>
                         </div>
                     </div>
@@ -116,25 +118,27 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
                     <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
                         <div class="flex items-center gap-2">
-                            <span class="w-7 h-7 rounded-lg bg-purple-100 text-purple-700 font-bold flex items-center justify-center text-sm">C</span>
+                            <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-sm">C</span>
                             <div>
-                                <h3 class="font-bold text-sm text-slate-800">KHỐI C (Block C)</h3>
-                                <p class="text-[10px] text-slate-400">16 Slots (C-01 &rarr; C-16)</p>
+                                <h3 class="font-bold text-sm text-slate-800">KHỐI C — Khu Cách Ly Cháy Nổ &amp; Đặc Biệt</h3>
+                                <p class="text-[10px] text-amber-700 font-semibold">16 Slots (C-01 &rarr; C-16) • Hazmat / Quá Khổ OOG / Bồn Tank</p>
                             </div>
                         </div>
                     </div>
                     <div class="grid grid-cols-4 gap-2.5">
                         <div th:each="slot : ${blockCSlots}"
                              class="rounded-xl p-2 min-h-[90px] border flex flex-col justify-between transition transform hover:-translate-y-0.5 hover:shadow cursor-pointer"
-                             th:classappend="${slot.occupied} ? (${slot.container.condition.name() == 'DAMAGED'} ? 'bg-rose-50 border-rose-400' : (${slot.container.containerType.name() == 'REEFER'} ? 'bg-cyan-50 border-cyan-400' : 'bg-sky-50 border-sky-400')) : 'bg-slate-50/70 border-slate-200 border-dashed hover:border-emerald-400'">
+                             th:classappend="${slot.occupied} ? (${slot.container.condition.name() == 'DAMAGED'} ? 'bg-rose-50 border-rose-400' : (${slot.container.containerType.name() != 'DRY'} ? 'bg-amber-50 border-amber-400' : 'bg-sky-50 border-sky-400')) : 'bg-slate-50/70 border-slate-200 border-dashed hover:border-emerald-400'">
                             <div class="flex items-center justify-between text-[11px]">
                                 <span class="font-mono font-bold" th:classappend="${slot.occupied} ? 'text-slate-800' : 'text-slate-400'" th:text="${slot.slotCode}">C-01</span>
                                 <span th:if="${!slot.occupied}" class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-700 font-semibold">Trống</span>
-                                <span th:if="${slot.occupied and slot.container.containerType.name() == 'REEFER'}" class="text-cyan-600"><i class="fa-solid fa-snowflake text-[10px]"></i></span>
+                                <span th:if="${slot.occupied and slot.container.containerType.name() == 'HAZMAT'}" class="text-rose-600 font-bold" title="Hàng Cháy Nổ / Nguy Hiểm"><i class="fa-solid fa-fire-flame-curved text-[11px]"></i></span>
+                                <span th:if="${slot.occupied and slot.container.containerType.name() == 'OOG'}" class="text-purple-700 font-bold" title="Hàng Quá Khổ / Siêu Trọng"><i class="fa-solid fa-weight-hanging text-[10px]"></i></span>
+                                <span th:if="${slot.occupied and slot.container.containerType.name() == 'TANK'}" class="text-indigo-700 font-bold" title="Hàng Bồn Lỏng / Khí"><i class="fa-solid fa-oil-can text-[10px]"></i></span>
                             </div>
                             <div th:if="${slot.occupied}" class="my-1">
                                 <a th:href="@{'/containers/' + ${slot.container.id}}" class="text-[11px] font-bold font-mono text-slate-800 hover:text-sky-600 block truncate" th:text="${slot.container.containerNumber}">CMAU9988</a>
-                                <div class="text-[9px] text-slate-500 truncate" th:text="${slot.container.shippingLine.code} + ' • ' + ${slot.container.isoType}">CMA • 20GP</div>
+                                <div class="text-[9px] text-amber-800 font-semibold truncate" th:text="${slot.container.containerType.name()} + ' • ' + ${slot.container.isoType}">HAZMAT • 40HC</div>
                             </div>
                             <div th:if="${slot.occupied}" class="flex items-center justify-between text-[9px] pt-1 border-t border-slate-200/50">
                                 <span th:text="${slot.container.cargoStatus.displayName}">Có hàng</span>

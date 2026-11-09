@@ -99,6 +99,7 @@ public class PortalController {
     public String bookAppointment(@RequestParam("appointmentType") Appointment.AppointmentType type,
                                   @RequestParam("bookingNumber") String bookingNumber,
                                   @RequestParam("containerNumber") String containerNumber,
+                                  @RequestParam(value = "containerType", defaultValue = "DRY") Container.ContainerType containerType,
                                   @RequestParam("licensePlate") String licensePlate,
                                   @RequestParam("phone") String phone,
                                   @RequestParam("appointmentTime") String appointmentTimeStr,
@@ -136,7 +137,7 @@ public class PortalController {
             String cleanNotes = (notes != null && !notes.trim().isEmpty()) ? notes.trim() : null;
 
             Appointment savedAppointment = appointmentService.createAppointment(
-                    currentUser, type, cleanBooking, cleanContainer, cleanPlate, cleanPhone, parsedTime, cleanSeal, customsClearanceCode, cleanNotes
+                    currentUser, type, cleanBooking, cleanContainer, containerType, cleanPlate, cleanPhone, parsedTime, cleanSeal, customsClearanceCode, cleanNotes
             );
 
             String slotCode = (savedAppointment.getContainer() != null && savedAppointment.getContainer().getCurrentSlot() != null)

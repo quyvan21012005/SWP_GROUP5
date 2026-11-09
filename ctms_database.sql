@@ -290,17 +290,17 @@ INSERT INTO dbo.yard_slots (id, block, slot_code, slot_index, container_id) VALU
 SET IDENTITY_INSERT dbo.yard_slots OFF;
 GO
 
--- 4.6. Danh sách Container mẫu
+-- 4.6. Danh sách Container mẫu (Đa dạng DRY, REEFER, HAZMAT cháy nổ, OOG quá khổ, TANK bồn lỏng)
 SET IDENTITY_INSERT dbo.containers ON;
 INSERT INTO dbo.containers (id, container_number, iso_type, container_type, cargo_status, condition, current_status, seal_number, gross_weight_kg, shipping_line_id, gate_in_time, gate_out_time, customs_clearance_code, customs_cleared) VALUES
 (1, 'MSKU9182736', '40HC', 'DRY', 'FULL', 'GOOD', 'IN_YARD', 'SL-99881', 28400.0, 1, DATEADD(HOUR, -4, GETDATE()), NULL, 'HQ-CONT-2026-001', 1),
-(2, 'MSKU3451290', '20GP', 'REEFER', 'FULL', 'GOOD', 'IN_YARD', 'SL-99882', 22100.0, 1, DATEADD(HOUR, -3, GETDATE()), NULL, 'HQ-CONT-2026-002', 1),
-(3, 'MSCU1122334', '40HC', 'DRY', 'EMPTY', 'GOOD', 'IN_YARD', 'SL-77661', 3800.0, 2, DATEADD(HOUR, -2, GETDATE()), NULL, 'HQ-CONT-2026-003', 1),
-(4, 'MSCU5566778', '40HC', 'REEFER', 'FULL', 'DAMAGED', 'IN_YARD', 'SL-77662', 29100.0, 2, DATEADD(HOUR, -1, GETDATE()), NULL, 'HQ-CONT-2026-004', 1),
-(5, 'CMAU9988776', '20GP', 'DRY', 'FULL', 'GOOD', 'IN_YARD', 'SL-55441', 21500.0, 3, DATEADD(MINUTE, -30, GETDATE()), NULL, 'HQ-CONT-2026-005', 1),
-(6, 'CMAU3344556', '45HC', 'DRY', 'EMPTY', 'GOOD', 'IN_YARD', 'SL-55442', 4200.0, 3, DATEADD(MINUTE, -15, GETDATE()), NULL, 'HQ-CONT-2026-006', 1),
+(2, 'MSCU1122334', '40HC', 'DRY', 'EMPTY', 'GOOD', 'IN_YARD', 'SL-77661', 3800.0, 2, DATEADD(HOUR, -3, GETDATE()), NULL, 'HQ-CONT-2026-002', 1),
+(3, 'CMAU9988776', '20GP', 'DRY', 'FULL', 'GOOD', 'IN_YARD', 'SL-55441', 21500.0, 3, DATEADD(HOUR, -2, GETDATE()), NULL, 'HQ-CONT-2026-003', 1),
+(4, 'MSKU3451290', '20GP', 'REEFER', 'FULL', 'GOOD', 'IN_YARD', 'SL-99882', 22100.0, 1, DATEADD(HOUR, -1, GETDATE()), NULL, 'HQ-CONT-2026-004', 1),
+(5, 'MSCU5566778', '40HC', 'REEFER', 'FULL', 'DAMAGED', 'IN_YARD', 'SL-77662', 29100.0, 2, DATEADD(MINUTE, -30, GETDATE()), NULL, 'HQ-CONT-2026-005', 1),
+(6, 'CMAU3344556', '40HC', 'HAZMAT', 'FULL', 'GOOD', 'IN_YARD', 'SL-HAZ-911', 26200.0, 3, DATEADD(MINUTE, -15, GETDATE()), NULL, 'HQ-IMDG-2026-006', 1),
 (7, 'MSKU7711223', '40HC', 'DRY', 'FULL', 'GOOD', 'GATE_IN', 'SL-99883', 27800.0, 1, DATEADD(MINUTE, -10, GETDATE()), NULL, 'HQ-CONT-2026-007', 1),
-(8, 'MSCU9900112', '20GP', 'REEFER', 'EMPTY', 'GOOD', 'EXPECTED', 'SL-77663', 2900.0, 2, NULL, NULL, 'HQ-CONT-2026-008', 1);
+(8, 'MSCU9900112', '45HC', 'OOG', 'FULL', 'GOOD', 'EXPECTED', 'SL-OOG-773', 34900.0, 2, NULL, NULL, 'HQ-CONT-2026-008', 1);
 SET IDENTITY_INSERT dbo.containers OFF;
 GO
 

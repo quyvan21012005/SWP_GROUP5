@@ -62,17 +62,32 @@ public class Container {
     private LocalDateTime gateOutTime;
 
     public enum ContainerType {
-        DRY("Container Khô (Dry)"),
-        REEFER("Container Lạnh (Reefer)");
+        DRY("Container Khô (Dry)", 0, YardSlot.YardBlock.BLOCK_A),
+        REEFER("Container Lạnh (Reefer)", 150000, YardSlot.YardBlock.BLOCK_B),
+        HAZMAT("Hàng Cháy Nổ / Nguy Hiểm (DG/Hazmat)", 300000, YardSlot.YardBlock.BLOCK_C),
+        OOG("Hàng Quá Khổ / Siêu Trọng (OOG)", 250000, YardSlot.YardBlock.BLOCK_C),
+        TANK("Hàng Bồn Lỏng / Khí (ISO Tank)", 200000, YardSlot.YardBlock.BLOCK_C);
 
         private final String displayName;
+        private final int surcharge;
+        private final YardSlot.YardBlock preferredBlock;
 
-        ContainerType(String displayName) {
+        ContainerType(String displayName, int surcharge, YardSlot.YardBlock preferredBlock) {
             this.displayName = displayName;
+            this.surcharge = surcharge;
+            this.preferredBlock = preferredBlock;
         }
 
         public String getDisplayName() {
             return displayName;
+        }
+
+        public int getSurcharge() {
+            return surcharge;
+        }
+
+        public YardSlot.YardBlock getPreferredBlock() {
+            return preferredBlock;
         }
     }
 

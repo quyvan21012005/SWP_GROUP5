@@ -12,6 +12,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findByDriverIdOrderByAppointmentTimeDesc(Long driverId);
     Optional<Appointment> findByBookingNumber(String bookingNumber);
     Optional<Appointment> findByContainerNumber(String containerNumber);
+    Optional<Appointment> findByGatePassCode(String gatePassCode);
     List<Appointment> findAllByOrderByAppointmentTimeDesc();
     List<Appointment> findByStatus(Appointment.AppointmentStatus status);
 }

@@ -59,9 +59,28 @@ public class DataInitializer implements CommandLineRunner {
                 }
             }
             for (Appointment a : appointmentRepository.findAll()) {
+                boolean changed = false;
                 if (a.getCustomsClearanceCode() == null || a.getCustomsClearanceCode().isBlank()) {
                     a.setCustomsClearanceCode("HQ-VNACCS-2026-00" + a.getId());
                     a.setCustomsCleared(true);
+                    changed = true;
+                }
+                if (a.getPaymentAmount() == null) {
+                    a.setPaymentAmount(a.getAppointmentType() == Appointment.AppointmentType.IMPORT_PICKUP ? 450000 : 400000);
+                    changed = true;
+                }
+                if (a.getPaid() == null) {
+                    if (a.getStatus() == Appointment.AppointmentStatus.CHECKED_IN || a.getStatus() == Appointment.AppointmentStatus.COMPLETED) {
+                        a.setPaid(true);
+                        a.setPaidAt(LocalDateTime.now().minusMinutes(40));
+                        String cleanBk = a.getBookingNumber() != null ? a.getBookingNumber().replaceAll("[^A-Za-z0-9]", "").toUpperCase() : "BK";
+                        a.setGatePassCode("QR-PASS-" + cleanBk + "-" + (1000 + a.getId()));
+                    } else {
+                        a.setPaid(false);
+                    }
+                    changed = true;
+                }
+                if (changed) {
                     appointmentRepository.save(a);
                 }
             }
@@ -261,6 +280,8 @@ public class DataInitializer implements CommandLineRunner {
                 .sealNumber(savedContainers.get(0).getSealNumber())
                 .customsClearanceCode("HQ-VNACCS-2026-001")
                 .customsCleared(true)
+                .paid(false)
+                .paymentAmount(450000)
                 .status(Appointment.AppointmentStatus.CONFIRMED)
                 .notes("Xe tải hẹn đến lấy cont nhập khẩu số MSKU9182736 | Giấy thông quan HQ: HQ-VNACCS-2026-001")
                 .build());
@@ -277,6 +298,10 @@ public class DataInitializer implements CommandLineRunner {
                 .sealNumber("SL-99883")
                 .customsClearanceCode("HQ-VNACCS-2026-002")
                 .customsCleared(true)
+                .paid(true)
+                .paymentAmount(400000)
+                .paidAt(LocalDateTime.now().minusMinutes(35))
+                .gatePassCode("QR-PASS-BKEXP2026002-1002")
                 .status(Appointment.AppointmentStatus.CHECKED_IN)
                 .notes("Hạ cont xuất khẩu đi tàu MSC Oscar | Giấy thông quan HQ: HQ-VNACCS-2026-002")
                 .build());

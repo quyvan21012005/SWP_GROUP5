@@ -12,7 +12,7 @@
                         <i class="fa-solid fa-door-open text-indigo-600"></i> Điều Hành Cổng Cảng (Gate Control)
                     </h1>
                     <p class="text-sm text-slate-500 mt-1">
-                        Kiểm tra niêm phong seal, tình trạng cont, đối soát booking và tự động ghi log di chuyển
+                        Quét Mã QR Vé Vào Cổng (chứng minh đã thanh toán), đối chiếu Giấy thông quan Hải quan, niêm chì seal và ghi log di chuyển
                     </p>
                 </div>
                 <div class="flex items-center gap-2">
@@ -25,6 +25,40 @@
                 </div>
             </div>
 
+            <!-- Flash Messages -->
+            <div th:if="${successMessage}" class="p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-medium flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                <span th:text="${successMessage}">Thành công!</span>
+            </div>
+
+            <div th:if="${errorMessage}" class="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-medium flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-circle-exclamation text-rose-600 text-base"></i>
+                <span th:text="${errorMessage}">Lỗi xử lý!</span>
+            </div>
+
+            <!-- Máy Quét Mã QR Vé Vào Cổng Của Tài Xế (Scan Gate Pass QR) -->
+            <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-emerald-950 text-white p-6 rounded-2xl shadow-md border border-indigo-700/40">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 text-[10px] font-bold uppercase tracking-wider border border-emerald-400/30">
+                            <i class="fa-solid fa-qrcode"></i> Cổng Kiểm Soát QR Tự Động
+                        </div>
+                        <h2 class="text-base font-bold text-white">Quét Mã QR Vào Cổng Của Tài Xế (Chứng Minh Đã Thanh Toán & Thông Quan)</h2>
+                        <p class="text-xs text-slate-300">
+                            Nhập hoặc dùng máy quét đọc <b>Mã QR Vào Cổng (`QR-PASS-...`)</b> trên điện thoại tài xế để xác thực thanh toán và mở thủ tục Gate In / Gate Out.
+                        </p>
+                    </div>
+                    <form th:action="@{/gate/scan-qr}" method="post" class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                        <input type="text" name="qrCode" required
+                               placeholder="Quét hoặc nhập mã: VD QR-PASS-..."
+                               class="w-full md:w-72 px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/25 text-white placeholder-slate-400 text-xs font-mono font-bold uppercase focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                        <button type="submit" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-camera"></i> Quét Xác Thực QR
+                        </button>
+                    </form>
+                </div>
+            </div>
+
             <!-- Gate Appointments Table -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-5 border-b border-slate-100 flex items-center justify-between">
@@ -32,7 +66,7 @@
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-calendar-check text-indigo-500"></i> Danh Sách Lịch Hẹn Xe Tải Đến Cổng (Gate Appointments)
                         </h2>
-                        <p class="text-xs text-slate-400 mt-0.5">Lịch hẹn giao/nhận do tài xế đăng ký trước</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Chỉ những xe Đã Thanh Toán (có Mã QR Cổng) và có Giấy Thông Quan Hải Quan mới được phép qua cổng</p>
                     </div>
                 </div>
 
@@ -45,20 +79,25 @@
                                 <th class="py-3 px-4 font-semibold">Biển số xe</th>
                                 <th class="py-3 px-4 font-semibold">Số Container</th>
                                 <th class="py-3 px-4 font-semibold">Giấy Thông Quan HQ</th>
-                                <th class="py-3 px-4 font-semibold">Tài xế / SĐT</th>
-                                <th class="py-3 px-4 font-semibold">Giờ hẹn</th>
+                                <th class="py-3 px-4 font-semibold">Thanh Toán & Mã QR Cổng</th>
                                 <th class="py-3 px-4 font-semibold">Trạng thái</th>
-                                <th class="py-3 px-4 font-semibold text-right">Thao tác</th>
+                                <th class="py-3 px-4 font-semibold text-right">Thao tác Cổng</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             <tr th:each="a : ${appointments}" class="hover:bg-slate-50 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-indigo-700" th:text="${a.bookingNumber}">BK-001</td>
+                                <td class="py-3 px-4">
+                                    <div class="font-mono font-bold text-indigo-700" th:text="${a.bookingNumber}">BK-001</div>
+                                    <div class="text-[10px] text-slate-400 font-mono" th:text="${#temporals.format(a.appointmentTime, 'dd/MM/yyyy HH:mm')}">23/09 14:00</div>
+                                </td>
                                 <td class="py-3 px-4">
                                     <span th:if="${a.appointmentType.name() == 'IMPORT_PICKUP'}" class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-semibold text-[10px]">Lấy hàng Nhập</span>
                                     <span th:if="${a.appointmentType.name() == 'EXPORT_DROPOFF'}" class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-semibold text-[10px]">Hạ hàng Xuất</span>
                                 </td>
-                                <td class="py-3 px-4 font-mono font-bold text-slate-800" th:text="${a.licensePlate}">51C-889.92</td>
+                                <td class="py-3 px-4">
+                                    <div class="font-mono font-bold text-slate-800" th:text="${a.licensePlate}">51C-889.92</div>
+                                    <div class="text-[10px] text-slate-400" th:text="${a.driver.fullName}">Lê Văn Tài Xế</div>
+                                </td>
                                 <td class="py-3 px-4 font-mono text-slate-700">
                                     <span class="font-bold text-slate-800" th:text="${a.containerNumber}">MSKU9182736</span>
                                     <span th:if="${a.container != null and a.container.currentSlot != null}"
@@ -77,27 +116,39 @@
                                         Chưa có giấy HQ
                                     </span>
                                 </td>
-                                <td class="py-3 px-4 text-slate-600">
-                                    <span th:text="${a.driver.fullName}">Lê Văn Tài Xế</span>
-                                    <span class="block text-[10px] text-slate-400" th:text="${a.driverPhone}">090...</span>
+                                <td class="py-3 px-4">
+                                    <div th:if="${a.paid != null and a.paid}">
+                                        <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px] inline-flex items-center gap-1">
+                                            <i class="fa-solid fa-qrcode text-emerald-700"></i> Đã TT — Có QR
+                                        </span>
+                                        <div class="font-mono text-[10px] font-bold text-indigo-700 mt-0.5" th:text="${a.gatePassCode}">QR-PASS-...</div>
+                                    </div>
+                                    <div th:if="${a.paid == null or !a.paid}">
+                                        <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] inline-flex items-center gap-1">
+                                            <i class="fa-solid fa-ban"></i> Chưa thanh toán
+                                        </span>
+                                        <div class="text-[10px] text-slate-400 mt-0.5">Chưa cấp QR vào cổng</div>
+                                    </div>
                                 </td>
-                                <td class="py-3 px-4 text-slate-600 font-mono" th:text="${#temporals.format(a.appointmentTime, 'dd/MM/yyyy HH:mm')}">23/09 14:00</td>
                                 <td class="py-3 px-4">
                                     <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold"
                                           th:classappend="${a.status.name() == 'CONFIRMED' ? 'bg-amber-100 text-amber-700' : (a.status.name() == 'CHECKED_IN' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600')}"
                                           th:text="${a.status.displayName}">Đã xác nhận</span>
                                 </td>
                                 <td class="py-3 px-4 text-right">
-                                    <a th:if="${a.status.name() == 'CONFIRMED' and a.appointmentType.name() == 'EXPORT_DROPOFF'}"
-                                       th:href="@{/gate/in(booking=${a.bookingNumber})}"
-                                       class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[11px] font-semibold inline-flex items-center gap-1 shadow-sm">
-                                        Check In
-                                    </a>
-                                    <a th:if="${a.status.name() == 'CONFIRMED' and a.appointmentType.name() == 'IMPORT_PICKUP'}"
-                                       th:href="@{/gate/out(booking=${a.bookingNumber})}"
-                                       class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[11px] font-semibold inline-flex items-center gap-1 shadow-sm">
-                                        Gate Out
-                                    </a>
+                                    <div th:if="${a.status.name() == 'CONFIRMED' and a.paid != null and a.paid}" class="inline-flex items-center gap-1.5">
+                                        <form th:action="@{/gate/scan-qr}" method="post" class="inline">
+                                            <input type="hidden" name="qrCode" th:value="${a.gatePassCode != null ? a.gatePassCode : a.bookingNumber}">
+                                            <button type="submit" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[11px] font-semibold inline-flex items-center gap-1 shadow-sm cursor-pointer">
+                                                <i class="fa-solid fa-qrcode"></i> Quét QR Cổng
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <span th:if="${a.status.name() == 'CONFIRMED' and (a.paid == null or !a.paid)}"
+                                          class="px-2.5 py-1 bg-slate-100 text-slate-400 rounded-lg text-[10px] font-semibold inline-flex items-center gap-1"
+                                          title="Tài xế cần thanh toán để lấy mã QR trước khi qua cổng">
+                                        <i class="fa-solid fa-lock"></i> Chờ TT QR
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>

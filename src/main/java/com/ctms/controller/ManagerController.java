@@ -1,9 +1,11 @@
 package com.ctms.controller;
 
+import com.ctms.model.Appointment;
 import com.ctms.model.Container;
 import com.ctms.model.User;
 import com.ctms.model.Vessel;
 import com.ctms.service.*;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -74,6 +80,45 @@ public class ManagerController {
         model.addAttribute("allAppointments", appointmentService.getAllAppointments());
         model.addAttribute("shippingLines", shippingLineService.getAllShippingLines());
         return "manager/reports";
+    }
+
+    /**
+     * Xuất Báo Cáo Doanh Thu & Lịch Hẹn Cổng ra file CSV (Hỗ trợ mở trực tiếp bằng Microsoft Excel UTF-8 BOM)
+     */
+    @GetMapping("/reports/export-csv")
+    public void exportReportsCsv(HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=\"CTMS_Bao_Cao_Doanh_Thu_Va_Cong.csv\"");
+
+        List<Appointment> appointments = appointmentService.getAllAppointments();
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8))) {
+            // UTF-8 BOM để Microsoft Excel đọc đúng tiếng Việt có dấu
+            writer.write('\uFEFF');
+            writer.println("Ma Booking,Loai Nghiep Vu,So Container,Bien So Xe,Tai Xe,Giay Thong Quan HQ,Ma QR Vao Cong,Phi Dich Vu (VND),Trang Thai Thanh Toan,Trang Thai Lich Hen");
+
+            for (Appointment a : appointments) {
+                long fee = a.getPaymentAmount() != null ? a.getPaymentAmount()
+                        : (a.getAppointmentType() == Appointment.AppointmentType.IMPORT_PICKUP ? 450000L : 400000L);
+                String paidStr = Boolean.TRUE.equals(a.getPaid()) ? "DA THANH TOAN (VietQR)" : "CHUA THANH TOAN";
+                String driverName = a.getDriver() != null ? a.getDriver().getFullName() : "N/A";
+                String gatePass = a.getGatePassCode() != null ? a.getGatePassCode() : "--";
+                String customs = a.getCustomsClearanceCode() != null ? a.getCustomsClearanceCode() : "--";
+
+                writer.printf("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%d,\"%s\",\"%s\"%n",
+                        a.getBookingNumber(),
+                        a.getAppointmentType().getDisplayName(),
+                        a.getContainerNumber(),
+                        a.getLicensePlate(),
+                        driverName,
+                        customs,
+                        gatePass,
+                        fee,
+                        paidStr,
+                        a.getStatus().getDisplayName()
+                );
+            }
+            writer.flush();
+        }
     }
 
     /**

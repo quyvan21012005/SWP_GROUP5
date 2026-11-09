@@ -162,6 +162,10 @@ CREATE TABLE dbo.appointments (
     seal_number NVARCHAR(255) NULL,
     customs_clearance_code NVARCHAR(60) NULL, -- Số tờ khai / Giấy thông quan Hải quan của Tài xế
     customs_cleared BIT NOT NULL DEFAULT 1,
+    paid BIT NOT NULL DEFAULT 0,              -- Trạng thái đã thanh toán phí nâng hạ qua VietQR
+    gate_pass_code NVARCHAR(80) NULL,         -- Mã QR Vé Vào Cổng (QR-PASS-...) cấp sau khi thanh toán
+    payment_amount INT NULL DEFAULT 450000,   -- Tổng phí dịch vụ nâng hạ + lưu bãi + phụ phí (VNĐ)
+    paid_at DATETIME2 NULL,                   -- Thời điểm xác nhận thanh toán
     status NVARCHAR(50) NOT NULL DEFAULT 'CONFIRMED', -- PENDING, CONFIRMED, CHECKED_IN, COMPLETED, CANCELLED
     notes NVARCHAR(MAX) NULL,
     CONSTRAINT fk_appointment_driver FOREIGN KEY (driver_id) REFERENCES dbo.users(id),
@@ -311,9 +315,9 @@ GO
 
 -- 4.7. Phiếu hẹn tài xế qua cổng (Appointments)
 SET IDENTITY_INSERT dbo.appointments ON;
-INSERT INTO dbo.appointments (id, driver_id, appointment_type, booking_number, container_number, container_id, license_plate, driver_phone, appointment_time, seal_number, customs_clearance_code, customs_cleared, status, notes) VALUES
-(1, 4, 'IMPORT_PICKUP', 'BK-IMP-2026-001', 'MSKU9182736', 1, '51C-889.92', '0904567890', DATEADD(HOUR, 3, GETDATE()), 'SL-99881', 'HQ-VNACCS-2026-001', 1, 'CONFIRMED', N'Xe tải hẹn đến lấy cont nhập khẩu số MSKU9182736 | Giấy thông quan HQ: HQ-VNACCS-2026-001'),
-(2, 4, 'EXPORT_DROPOFF', 'BK-EXP-2026-002', 'MSKU7711223', 7, '51D-123.45', '0904567890', DATEADD(MINUTE, -30, GETDATE()), 'SL-99883', 'HQ-VNACCS-2026-002', 1, 'CHECKED_IN', N'Hạ cont xuất khẩu đi tàu MSC Oscar | Giấy thông quan HQ: HQ-VNACCS-2026-002');
+INSERT INTO dbo.appointments (id, driver_id, appointment_type, booking_number, container_number, container_id, license_plate, driver_phone, appointment_time, seal_number, customs_clearance_code, customs_cleared, paid, gate_pass_code, payment_amount, paid_at, status, notes) VALUES
+(1, 4, 'IMPORT_PICKUP', 'BK-IMP-2026-001', 'MSKU9182736', 1, '51C-889.92', '0904567890', DATEADD(HOUR, 3, GETDATE()), 'SL-99881', 'HQ-VNACCS-2026-001', 1, 0, NULL, 450000, NULL, 'CONFIRMED', N'Xe tải hẹn đến lấy cont nhập khẩu số MSKU9182736 | Giấy thông quan HQ: HQ-VNACCS-2026-001'),
+(2, 4, 'EXPORT_DROPOFF', 'BK-EXP-2026-002', 'MSKU7711223', 7, '51D-123.45', '0904567890', DATEADD(MINUTE, -30, GETDATE()), 'SL-99883', 'HQ-VNACCS-2026-002', 1, 1, 'QR-PASS-BKEXP2026002-1002', 400000, DATEADD(MINUTE, -35, GETDATE()), 'CHECKED_IN', N'Hạ cont xuất khẩu đi tàu MSC Oscar | Giấy thông quan HQ: HQ-VNACCS-2026-002');
 SET IDENTITY_INSERT dbo.appointments OFF;
 GO
 

@@ -142,17 +142,19 @@ public class PortalController {
             String slotCode = (savedAppointment.getContainer() != null && savedAppointment.getContainer().getCurrentSlot() != null)
                     ? savedAppointment.getContainer().getCurrentSlot().getSlotCode() : "Chờ xếp bãi";
 
-            // Mức phí nâng hạ theo quy định cảng
-            String feeStr = (type == Appointment.AppointmentType.IMPORT_PICKUP) ? "450.000" : "400.000";
-            int amount = (type == Appointment.AppointmentType.IMPORT_PICKUP) ? 450000 : 400000;
+            // Mức phí dịch vụ động (Phí nâng hạ cơ bản + Phụ phí Cont lạnh + Phí lưu bãi)
+            int amount = savedAppointment.getPaymentAmount() != null
+                    ? savedAppointment.getPaymentAmount()
+                    : ((type == Appointment.AppointmentType.IMPORT_PICKUP) ? 450000 : 400000);
+            String feeStr = String.format("%,d", amount).replace(',', '.');
 
-            // Link tạo mã VietQR MBBank chuẩn xác
-            String qrUrl = "https://img.vietqr.io/image/MB-9999888868-compact2.png?amount=" + amount
+            // Link tạo mã VietQR MB Bank chuẩn xác: STK 0867601156 - NGUYEN VAN QUY
+            String qrUrl = "https://img.vietqr.io/image/MB-0867601156-compact2.png?amount=" + amount
                     + "&addInfo=" + URLEncoder.encode("CTMS " + savedAppointment.getBookingNumber(), StandardCharsets.UTF_8)
-                    + "&accountName=CTMS%20PORT%20TERMINAL";
+                    + "&accountName=NGUYEN%20VAN%20QUY";
 
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Đăng ký lịch hẹn (" + type.getDisplayName() + ") thành công! Vị trí bãi chỉ định: " + slotCode);
+                    "Đăng ký lịch hẹn (" + type.getDisplayName() + ") thành công! Vị trí bãi: " + slotCode + " | Tổng phí: " + feeStr + " VNĐ. Vui lòng quét mã VietQR (MB Bank - 0867601156 - NGUYEN VAN QUY) để nhận Mã QR Vào Cổng.");
             redirectAttributes.addFlashAttribute("newAppointment", savedAppointment);
             redirectAttributes.addFlashAttribute("assignedSlot", slotCode);
             redirectAttributes.addFlashAttribute("serviceFee", feeStr);
@@ -162,5 +164,63 @@ public class PortalController {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi đặt lịch hẹn: " + e.getMessage());
         }
         return "redirect:/portal/driver";
+    }
+
+    @PostMapping("/driver/confirm-payment")
+    public String confirmDriverPayment(@RequestParam("appointmentId") Long appointmentId,
+                                       RedirectAttributes redirectAttributes) {
+        try {
+            Appointment paidApp = appointmentService.confirmPayment(appointmentId);
+            String slotCode = (paidApp.getContainer() != null && paidApp.getContainer().getCurrentSlot() != null)
+                    ? paidApp.getContainer().getCurrentSlot().getSlotCode() : "Hệ thống tự động sắp xếp";
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Xác nhận thanh toán thành công! Đã cấp Mã QR Vào Cổng: " + paidApp.getGatePassCode() + " — Hãy xuất trình mã QR này để nhân viên cổng quét khi vào cảng.");
+            redirectAttributes.addFlashAttribute("paidAppointment", paidApp);
+            redirectAttributes.addFlashAttribute("assignedSlot", slotCode);
+        } catch (Exception e) {
+            log.error("Lỗi xác nhận thanh toán: ", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi xác nhận thanh toán: " + e.getMessage());
+        }
+        return "redirect:/portal/driver";
+    }
+
+    @PostMapping("/driver/cancel-appointment")
+    public String cancelDriverAppointment(@RequestParam("appointmentId") Long appointmentId,
+                                          RedirectAttributes redirectAttributes) {
+        try {
+            Appointment cancelled = appointmentService.cancelAppointment(appointmentId);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Đã hủy lịch hẹn " + cancelled.getBookingNumber() + " (Container: " + cancelled.getContainerNumber() + ") và giải phóng ô bãi thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi hủy lịch hẹn: " + e.getMessage());
+        }
+        return "redirect:/portal/driver";
+    }
+
+    @PostMapping("/shipping-line/register-container")
+    public String registerShippingLineContainer(@RequestParam("containerNumber") String containerNumber,
+                                                @RequestParam(value = "isoType", defaultValue = "40HC") String isoType,
+                                                @RequestParam(value = "containerType", defaultValue = "DRY") Container.ContainerType containerType,
+                                                @RequestParam(value = "cargoStatus", defaultValue = "FULL") Container.CargoStatus cargoStatus,
+                                                @RequestParam(value = "sealNumber", required = false) String sealNumber,
+                                                @RequestParam(value = "grossWeightKg", required = false) Double grossWeightKg,
+                                                @RequestParam("customsClearanceCode") String customsClearanceCode,
+                                                @AuthenticationPrincipal UserDetails userDetails,
+                                                RedirectAttributes redirectAttributes) {
+        try {
+            User currentUser = userDetails != null ? userService.findByUsername(userDetails.getUsername()) : null;
+            Long shippingLineId = (currentUser != null && currentUser.getShippingLine() != null)
+                    ? currentUser.getShippingLine().getId() : 1L;
+            Container created = containerService.registerManifestContainer(
+                    shippingLineId, containerNumber, isoType, containerType, cargoStatus, sealNumber, grossWeightKg, customsClearanceCode
+            );
+            String slotInfo = created.getCurrentSlot() != null ? " (Đã phân bổ vào Ô bãi " + created.getCurrentSlot().getSlotCode() + ")" : "";
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Đã khai báo Manifest Container " + created.getContainerNumber() + " kèm Giấy thông quan HQ ("
+                            + created.getCustomsClearanceCode() + ") thành công" + slotInfo + "!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khai báo Container: " + e.getMessage());
+        }
+        return "redirect:/portal/shipping-line";
     }
 }

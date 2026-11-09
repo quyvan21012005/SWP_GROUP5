@@ -84,13 +84,16 @@
                 </div>
             </div>
 
-            <!-- Card 4: Lịch hẹn xe tải -->
+            <!-- Card 4: Lịch hẹn xe tải & Doanh thu VietQR -->
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition flex items-center justify-between">
                 <div>
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Lưu Lượng Phương Tiện Cổng</div>
-                    <div class="text-3xl font-black text-slate-800 mt-1" th:text="${appointments != null ? appointments.size() : 0}">5</div>
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Doanh Thu Cổng VietQR</div>
+                    <div class="text-2xl font-black text-emerald-600 mt-1">
+                        <span th:text="${stats.formattedQrRevenue}">1.050.000</span> <span class="text-xs font-semibold text-slate-500">VNĐ</span>
+                    </div>
                     <div class="text-xs text-purple-600 font-semibold mt-1 flex items-center gap-1">
-                        <i class="fa-solid fa-truck-ramp-box text-[11px]"></i> Phiếu hẹn giao nhận hôm nay
+                        <i class="fa-solid fa-qrcode text-[11px]"></i>
+                        Đã thu <span th:text="${stats.paidAppointmentsCount}">2</span> / <span th:text="${appointments != null ? appointments.size() : 0}">2</span> phiếu hẹn
                     </div>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl border border-purple-100">

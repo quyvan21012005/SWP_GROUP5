@@ -96,12 +96,92 @@
 
             <!-- Containers belonging to this Shipping Line -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                <div class="p-5 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                     <div>
                         <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-boxes-stacked text-indigo-600"></i> Danh Sách Container Của Hãng (Your Containers)
                         </h2>
-                        <p class="text-xs text-slate-400 mt-0.5">Phân quyền dữ liệu theo phạm vi sở hữu của hãng tàu</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Phân quyền dữ liệu theo phạm vi sở hữu của hãng tàu — Khai báo Manifest tự động gán ô bãi</p>
+                    </div>
+                    <button type="button" onclick="document.getElementById('manifestModal').classList.remove('hidden'); document.getElementById('manifestModal').style.display='flex';"
+                            class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-plus-circle"></i> Khai Báo Container Mới (Manifest)
+                    </button>
+                </div>
+
+                <!-- Modal Khai Báo Container Mới (Manifest) -->
+                <div id="manifestModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
+                     onclick="if(event.target === this) { this.classList.add('hidden'); this.style.display='none'; }">
+                    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                            <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-file-circle-plus text-sky-600"></i> Khai Báo Container Mới (E-Manifest & Hải Quan)
+                            </h3>
+                            <button type="button" onclick="document.getElementById('manifestModal').classList.add('hidden'); document.getElementById('manifestModal').style.display='none';"
+                                    class="text-slate-400 hover:text-slate-600 cursor-pointer">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+                        <form th:action="@{/portal/shipping-line/register-container}" method="post" class="space-y-3.5 text-xs">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Số Container (ISO 6346) *</label>
+                                    <input type="text" name="containerNumber" required placeholder="VD: MSKU8899123"
+                                           class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-mono font-bold uppercase focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Kích Cỡ ISO *</label>
+                                    <select name="isoType" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                        <option value="40HC">40HC (40ft Cao)</option>
+                                        <option value="20GP">20GP (20ft Thường)</option>
+                                        <option value="45HC">45HC (45ft Siêu trường)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Loại Container *</label>
+                                    <select name="containerType" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                        <option value="DRY">Container Khô (DRY)</option>
+                                        <option value="REEFER">Container Lạnh (REEFER)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Trạng Thái Hàng Hóa *</label>
+                                    <select name="cargoStatus" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                        <option value="FULL">Có hàng (FULL)</option>
+                                        <option value="EMPTY">Container Rỗng (EMPTY)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Số Chì Niêm Phong (Seal)</label>
+                                    <input type="text" name="sealNumber" placeholder="VD: SL-MAE-881"
+                                           class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-mono uppercase focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Trọng Lượng (Gross Kg)</label>
+                                    <input type="number" name="grossWeightKg" value="24500"
+                                           class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-mono focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                </div>
+                            </div>
+                            <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5">
+                                <label class="block font-bold text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-shield text-emerald-600"></i> Giấy Thông Quan Hải Quan Container * (Bắt buộc)
+                                </label>
+                                <input type="text" name="customsClearanceCode" required placeholder="VD: HQ-CONT-2026-099"
+                                       class="w-full p-2.5 bg-white border border-emerald-300 rounded-xl font-mono font-bold uppercase text-emerald-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                <p class="text-[11px] text-emerald-700">Container có mã thông quan Hải quan hợp lệ sẽ được hệ thống tự động phân bổ ô bãi trống.</p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                                <button type="button" onclick="document.getElementById('manifestModal').classList.add('hidden'); document.getElementById('manifestModal').style.display='none';"
+                                        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition cursor-pointer">Hủy</button>
+                                <button type="submit" class="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-check"></i> Lưu Manifest & Phân Bổ Bãi
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div class="overflow-x-auto">

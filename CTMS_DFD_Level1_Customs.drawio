@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-11-04T13:45:00.000Z" agent="Antigravity" version="24.0.0" type="device">
+  <diagram id="dfd-level-1-customs" name="1. DFD Level 1 (Có Hải Quan - 7.0)">
+    <mxGraphModel dx="1650" dy="1050" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" background="#121212" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITLE -->
+        <mxCell id="title" value="HỆ THỐNG QUẢN LÝ BẾN CẢNG CONTAINER (CTMS)&lt;br&gt;SƠ ĐỒ PHÂN RÃ LUỒNG DỮ LIỆU MỨC 1 (DFD LEVEL 1 - CÓ THÔNG QUAN HẢI QUAN)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#93C5FD;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="15" width="880" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== EXTERNAL ENTITIES (5 CORNERS/SIDES) ==================== -->
+        <!-- MANAGER (Top-Left, Brown/Amber) -->
+        <mxCell id="ent_manager" value="&lt;b&gt;MANAGER&lt;/b&gt;&lt;br&gt;(Người Quản lý)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#452208;strokeColor=#D97706;strokeWidth=2;fontColor=#FDE68A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="95" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- TERMINAL OPERATOR (Bottom-Left, Green) -->
+        <mxCell id="ent_operator" value="&lt;b&gt;TERMINAL OPERATOR&lt;/b&gt;&lt;br&gt;(Nhân viên Vận hành)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0D3B26;strokeColor=#22C55E;strokeWidth=2;fontColor=#BBF7D0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="610" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- SHIPPING LINE STAFF (Top-Right, Purple) -->
+        <mxCell id="ent_shipping" value="&lt;b&gt;SHIPPING LINE STAFF&lt;/b&gt;&lt;br&gt;(NV Hãng tàu)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4A154B;strokeColor=#C084FC;strokeWidth=2;fontColor=#F3E8FF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="95" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- TRUCK DRIVER (Bottom-Right, Rust/Orange-Red) -->
+        <mxCell id="ent_driver" value="&lt;b&gt;TRUCK DRIVER&lt;/b&gt;&lt;br&gt;(Tài xế Xe tải)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4C1D13;strokeColor=#F97316;strokeWidth=2;fontColor=#FFEDD5;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="610" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- CUSTOMS AUTHORITY (Middle-Right, Cyan/Teal Highlight) -->
+        <mxCell id="ent_customs" value="&lt;b&gt;CUSTOMS AUTHORITY&lt;/b&gt;&lt;br&gt;(Cơ quan Hải quan)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#083344;strokeColor=#06B6D4;strokeWidth=2.5;fontColor=#A5F3FC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="360" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== PROCESSES (1.0 TO 7.0 - BLUE ELLIPSES) ==================== -->
+        <!-- 1.0 Auth -->
+        <mxCell id="p1" value="&lt;b&gt;1.0&lt;/b&gt;&lt;br&gt;Xác thực &amp;amp; Phân quyền&lt;br&gt;(Login / Auth)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="710" y="80" width="180" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- 2.0 Vessel & Berth -->
+        <mxCell id="p2" value="&lt;b&gt;2.0&lt;/b&gt;&lt;br&gt;Quản lý Hãng tàu,&lt;br&gt;Tàu &amp;amp; Phân bổ Cầu bến" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="230" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 3.0 Container -->
+        <mxCell id="p3" value="&lt;b&gt;3.0&lt;/b&gt;&lt;br&gt;Quản lý &amp;amp; Tra cứu&lt;br&gt;Container" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="230" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 4.0 Yard & Slot -->
+        <mxCell id="p4" value="&lt;b&gt;4.0&lt;/b&gt;&lt;br&gt;Quản lý Bãi,&lt;br&gt;Gán Slot &amp;amp; Đảo chuyển" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="510" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 5.0 Gate & Appointment -->
+        <mxCell id="p5" value="&lt;b&gt;5.0&lt;/b&gt;&lt;br&gt;Quản lý Lịch hẹn, Thanh toán QR&lt;br&gt;&amp;amp; Vận hành Cổng (Gate In/Out)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="510" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 6.0 Dashboard & Reports -->
+        <mxCell id="p6" value="&lt;b&gt;6.0&lt;/b&gt;&lt;br&gt;Báo cáo &amp;amp; Giám sát&lt;br&gt;Vận hành (Dashboard)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="710" y="920" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 7.0 Customs Clearance (NEW - Highlighted Cyan/Blue) -->
+        <mxCell id="p7" value="&lt;b&gt;7.0&lt;/b&gt;&lt;br&gt;Kiểm tra &amp;amp; Xác thực&lt;br&gt;Thông quan Hải quan" style="ellipse;whiteSpace=wrap;html=1;fillColor=#083344;strokeColor=#06B6D4;strokeWidth=2.5;fontColor=#67E8F9;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="365" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== DATA STORES (D1 TO D7 - CENTER COLUMN) ==================== -->
+        <mxCell id="d1" value="&lt;b&gt;D1&lt;/b&gt; | Tài khoản &amp;amp; Phân quyền (Users)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="230" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d2" value="&lt;b&gt;D2&lt;/b&gt; | Hãng tàu, Tàu &amp;amp; Cầu bến (Vessel/Berth)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="310" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d7" value="&lt;b&gt;D7&lt;/b&gt; | Hồ sơ Thông quan Hải quan (Customs Store)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#083344;strokeColor=#06B6D4;strokeWidth=2;fontColor=#A5F3FC;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="390" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d3" value="&lt;b&gt;D3&lt;/b&gt; | Hồ sơ Container (Container Store)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="475" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d4" value="&lt;b&gt;D4&lt;/b&gt; | Sơ đồ Bãi &amp;amp; Vị trí Slot (Yard/Slots)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="575" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d5" value="&lt;b&gt;D5&lt;/b&gt; | Lịch hẹn Cổng (Gate Appointments)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="680" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d6" value="&lt;b&gt;D6&lt;/b&gt; | Lịch sử Di chuyển (Movements History)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="785" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== ORIGINAL DATA FLOWS ==================== -->
+        <!-- Manager -> 1.0 -->
+        <mxCell id="f_m_p1" value="Tên đăng nhập / MK" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#A1A1AA;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_manager" target="p1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Shipping -> 1.0 -->
+        <mxCell id="f_s_p1" value="Tên đăng nhập / MK" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#A1A1AA;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_shipping" target="p1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 1.0 -> D1 -->
+        <mxCell id="f_p1_d1" value="Đối soát quyền" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p1" target="d1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Manager -> 2.0 -->
+        <mxCell id="f_m_p2" value="Thông tin hãng tàu, tàu, gán cầu bến" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;fontColor=#FDE68A;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_manager" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Shipping -> 2.0 -->
+        <mxCell id="f_s_p2" value="Lịch trình tàu &amp;amp; Mã thông quan Tàu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#F3E8FF;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_shipping" target="p2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1280" y="190" />
+              <mxPoint x="442" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2.0 -> D2 -->
+        <mxCell id="f_p2_d2" value="Ghi nhận Hãng tàu/Tàu/Bến" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p2" target="d2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Shipping -> 3.0 -->
+        <mxCell id="f_s_p3" value="Đăng ký / Cập nhật Container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#F3E8FF;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_shipping" target="p3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 3.0 -> D3 -->
+        <mxCell id="f_p3_d3" value="Lưu &amp;amp; tra cứu thông tin Cont" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p3" target="d3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="990" y="278" />
+              <mxPoint x="990" y="485" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Operator -> 3.0 -->
+        <mxCell id="f_op_p3" value="Tìm kiếm &amp;amp; lọc container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#22C55E;fontColor=#BBF7D0;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_operator" target="p3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="625" />
+              <mxPoint x="290" y="455" />
+              <mxPoint x="1030" y="455" />
+              <mxPoint x="1030" y="295" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Operator -> 4.0 -->
+        <mxCell id="f_op_p4" value="Gán slot, Di chuyển slot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#22C55E;fontColor=#BBF7D0;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_operator" target="p4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 4.0 -> D3 -->
+        <mxCell id="f_p4_d3" value="Cập nhật trạng thái cont (4.20)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F97316;fontColor=#FFEDD5;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p4" target="d3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="442" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4.0 -> D4 -->
+        <mxCell id="f_p4_d4" value="Cập nhật vị trí slot bãi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p4" target="d4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 4.0 -> D6 -->
+        <mxCell id="f_p4_d6" value="Ghi nhận di chuyển (4.19)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F97316;fontColor=#FFEDD5;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p4" target="d6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="442" y="806" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Shipping -> 5.0 -->
+        <mxCell id="f_s_p5" value="Đặt hẹn Hạ bãi / Lấy cont (4.13, 4.14)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#F3E8FF;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_shipping" target="p5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1540" y="128" />
+              <mxPoint x="1540" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Driver -> 5.0 -->
+        <mxCell id="f_dr_p5" value="Đặt lịch + Giấy HQ + Thanh toán VietQR &amp;amp; Nhận Mã QR Vào Cổng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F97316;fontColor=#FFEDD5;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_driver" target="p5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Operator -> 5.0 -->
+        <mxCell id="f_op_p5" value="Quét Mã QR Cổng (Chứng minh đã TT), Check seal &amp;amp; Giấy HQ (4.15-4.17)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#22C55E;fontColor=#BBF7D0;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_operator" target="p5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="745" />
+              <mxPoint x="1120" y="745" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5.0 -> D5 -->
+        <mxCell id="f_p5_d5" value="Lưu / Cập nhật Lịch hẹn Cổng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#A1A1AA;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p5" target="d5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="558" />
+              <mxPoint x="1010" y="701" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5.0 -> D6 -->
+        <mxCell id="f_p5_d6" value="Ghi nhận xe ra/vào bãi (4.19)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F97316;fontColor=#FFEDD5;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p5" target="d6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1158" y="806" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- D2, D3, D4, D5 -> 6.0 -->
+        <mxCell id="f_d2_p6" value="Dữ liệu Tàu &amp;amp; Bến" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d2" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="585" y="331" />
+              <mxPoint x="585" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f_d3_p6" value="Số lượng Container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d3" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="496" />
+              <mxPoint x="610" y="960" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f_d4_p6" value="Tỷ lệ lấp đầy Bãi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d4" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="635" y="596" />
+              <mxPoint x="635" y="975" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f_d5_p6" value="Lưu lượng Cổng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d5" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="975" y="701" />
+              <mxPoint x="975" y="965" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 6.0 -> Manager & Operator -->
+        <mxCell id="f_p6_m" value="Dashboard điều hành tổng thể" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p6" target="ent_manager">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="115" y="968" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f_p6_op" value="Biểu đồ hoạt động bãi &amp;amp; cổng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p6" target="ent_operator">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="162" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== NEW CUSTOMS CLEARANCE FLOWS (7.0 & D7) ==================== -->
+        <!-- Customs Authority <-> 7.0 -->
+        <mxCell id="f_cus_p7" value="Cấp &amp;amp; Đối chiếu Giấy thông quan (HQ)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=2;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_customs" target="p7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 7.0 <-> D7 -->
+        <mxCell id="f_p7_d7" value="Lưu &amp;amp; Xác thực Mã Thông quan (Tàu / Cont)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=2;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p7" target="d7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 2.0 <-> D7 (Check Vessel Customs before Berthing / Unloading / Departure) -->
+        <mxCell id="f_d7_p2" value="Kiểm tra Thông quan Tàu trước khi Cập bến / Dỡ hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=2;dashed=1;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d7" target="p2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="411" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5.0 <-> 7.0 (Check Truck/Container Customs before Gate In / Gate Out) -->
+        <mxCell id="f_p5_p7" value="Bắt buộc Thông quan trước khi Gate-in (Hạ hàng) / Gate-out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=2;dashed=1;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p5" target="p7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 3.0 <-> 7.0 (Container Customs Declaration) -->
+        <mxCell id="f_p3_p7" value="Đồng bộ trạng thái Thông quan Cont" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=1.5;dashed=1;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p3" target="p7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- D7 -> 6.0 (Customs Audit to Dashboard) -->
+        <mxCell id="f_d7_p6" value="Số liệu Thông quan HQ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d7" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="955" y="411" />
+              <mxPoint x="955" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+<diagram id="dfd-level-1-customs" name="1. DFD Level 1 (Có Hải Quan - 7.0)">
+    <mxGraphModel dx="1650" dy="1050" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" background="#121212" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITLE -->
+        <mxCell id="title" value="HỆ THỐNG QUẢN LÝ BẾN CẢNG CONTAINER (CTMS)&lt;br&gt;SƠ ĐỒ PHÂN RÃ LUỒNG DỮ LIỆU MỨC 1 (DFD LEVEL 1 - CÓ THÔNG QUAN HẢI QUAN)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#93C5FD;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="15" width="880" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== EXTERNAL ENTITIES (5 CORNERS/SIDES) ==================== -->
+        <!-- MANAGER (Top-Left, Brown/Amber) -->
+        <mxCell id="ent_manager" value="&lt;b&gt;MANAGER&lt;/b&gt;&lt;br&gt;(Người Quản lý)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#452208;strokeColor=#D97706;strokeWidth=2;fontColor=#FDE68A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="95" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- TERMINAL OPERATOR (Bottom-Left, Green) -->
+        <mxCell id="ent_operator" value="&lt;b&gt;TERMINAL OPERATOR&lt;/b&gt;&lt;br&gt;(Nhân viên Vận hành)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0D3B26;strokeColor=#22C55E;strokeWidth=2;fontColor=#BBF7D0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="610" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- SHIPPING LINE STAFF (Top-Right, Purple) -->
+        <mxCell id="ent_shipping" value="&lt;b&gt;SHIPPING LINE STAFF&lt;/b&gt;&lt;br&gt;(NV Hãng tàu)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4A154B;strokeColor=#C084FC;strokeWidth=2;fontColor=#F3E8FF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="95" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- TRUCK DRIVER (Bottom-Right, Rust/Orange-Red) -->
+        <mxCell id="ent_driver" value="&lt;b&gt;TRUCK DRIVER&lt;/b&gt;&lt;br&gt;(Tài xế Xe tải)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4C1D13;strokeColor=#F97316;strokeWidth=2;fontColor=#FFEDD5;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="610" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- CUSTOMS AUTHORITY (Middle-Right, Cyan/Teal Highlight) -->
+        <mxCell id="ent_customs" value="&lt;b&gt;CUSTOMS AUTHORITY&lt;/b&gt;&lt;br&gt;(Cơ quan Hải quan)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#083344;strokeColor=#06B6D4;strokeWidth=2.5;fontColor=#A5F3FC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="360" width="165" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== PROCESSES (1.0 TO 7.0 - BLUE ELLIPSES) ==================== -->
+        <!-- 1.0 Auth -->
+        <mxCell id="p1" value="&lt;b&gt;1.0&lt;/b&gt;&lt;br&gt;Xác thực &amp;amp; Phân quyền&lt;br&gt;(Login / Auth)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="710" y="80" width="180" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- 2.0 Vessel & Berth -->
+        <mxCell id="p2" value="&lt;b&gt;2.0&lt;/b&gt;&lt;br&gt;Quản lý Hãng tàu,&lt;br&gt;Tàu &amp;amp; Phân bổ Cầu bến" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="230" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 3.0 Container -->
+        <mxCell id="p3" value="&lt;b&gt;3.0&lt;/b&gt;&lt;br&gt;Quản lý &amp;amp; Tra cứu&lt;br&gt;Container" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="230" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 4.0 Yard & Slot -->
+        <mxCell id="p4" value="&lt;b&gt;4.0&lt;/b&gt;&lt;br&gt;Quản lý Bãi,&lt;br&gt;Gán Slot &amp;amp; Đảo chuyển" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="510" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 5.0 Gate & Appointment -->
+        <mxCell id="p5" value="&lt;b&gt;5.0&lt;/b&gt;&lt;br&gt;Quản lý Lịch hẹn, Thanh toán QR&lt;br&gt;&amp;amp; Vận hành Cổng (Gate In/Out)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="510" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 6.0 Dashboard & Reports -->
+        <mxCell id="p6" value="&lt;b&gt;6.0&lt;/b&gt;&lt;br&gt;Báo cáo &amp;amp; Giám sát&lt;br&gt;Vận hành (Dashboard)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#0F294A;strokeColor=#3B82F6;strokeWidth=2;fontColor=#93C5FD;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="710" y="920" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- 7.0 Customs Clearance (NEW - Highlighted Cyan/Blue) -->
+        <mxCell id="p7" value="&lt;b&gt;7.0&lt;/b&gt;&lt;br&gt;Kiểm tra &amp;amp; Xác thực&lt;br&gt;Thông quan Hải quan" style="ellipse;whiteSpace=wrap;html=1;fillColor=#083344;strokeColor=#06B6D4;strokeWidth=2.5;fontColor=#67E8F9;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="365" width="185" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== DATA STORES (D1 TO D7 - CENTER COLUMN) ==================== -->
+        <mxCell id="d1" value="&lt;b&gt;D1&lt;/b&gt; | Tài khoản &amp;amp; Phân quyền (Users)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="230" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d2" value="&lt;b&gt;D2&lt;/b&gt; | Hãng tàu, Tàu &amp;amp; Cầu bến (Vessel/Berth)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="310" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d7" value="&lt;b&gt;D7&lt;/b&gt; | Hồ sơ Thông quan Hải quan (Customs Store)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#083344;strokeColor=#06B6D4;strokeWidth=2;fontColor=#A5F3FC;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="390" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d3" value="&lt;b&gt;D3&lt;/b&gt; | Hồ sơ Container (Container Store)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="475" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d4" value="&lt;b&gt;D4&lt;/b&gt; | Sơ đồ Bãi &amp;amp; Vị trí Slot (Yard/Slots)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="575" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d5" value="&lt;b&gt;D5&lt;/b&gt; | Lịch hẹn Cổng (Gate Appointments)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="680" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="d6" value="&lt;b&gt;D6&lt;/b&gt; | Lịch sử Di chuyển (Movements History)" style="shape=partialRectangle;whiteSpace=wrap;html=1;left=0;right=0;fillColor=#18181B;strokeColor=#52525B;strokeWidth=1.5;fontColor=#E4E4E7;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="785" width="270" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== ORIGINAL DATA FLOWS ==================== -->
+        <!-- Manager -> 1.0 -->
+        <mxCell id="f_m_p1" value="Tên đăng nhập / MK" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#A1A1AA;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_manager" target="p1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Shipping -> 1.0 -->
+        <mxCell id="f_s_p1" value="Tên đăng nhập / MK" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#A1A1AA;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_shipping" target="p1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 1.0 -> D1 -->
+        <mxCell id="f_p1_d1" value="Đối soát quyền" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p1" target="d1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Manager -> 2.0 -->
+        <mxCell id="f_m_p2" value="Thông tin hãng tàu, tàu, gán cầu bến" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;fontColor=#FDE68A;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_manager" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Shipping -> 2.0 -->
+        <mxCell id="f_s_p2" value="Lịch trình tàu &amp;amp; Mã thông quan Tàu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#F3E8FF;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_shipping" target="p2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1280" y="190" />
+              <mxPoint x="442" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2.0 -> D2 -->
+        <mxCell id="f_p2_d2" value="Ghi nhận Hãng tàu/Tàu/Bến" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p2" target="d2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Shipping -> 3.0 -->
+        <mxCell id="f_s_p3" value="Đăng ký / Cập nhật Container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#F3E8FF;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_shipping" target="p3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 3.0 -> D3 -->
+        <mxCell id="f_p3_d3" value="Lưu &amp;amp; tra cứu thông tin Cont" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p3" target="d3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="990" y="278" />
+              <mxPoint x="990" y="485" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Operator -> 3.0 -->
+        <mxCell id="f_op_p3" value="Tìm kiếm &amp;amp; lọc container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#22C55E;fontColor=#BBF7D0;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_operator" target="p3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="625" />
+              <mxPoint x="290" y="455" />
+              <mxPoint x="1030" y="455" />
+              <mxPoint x="1030" y="295" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Operator -> 4.0 -->
+        <mxCell id="f_op_p4" value="Gán slot, Di chuyển slot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#22C55E;fontColor=#BBF7D0;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_operator" target="p4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 4.0 -> D3 -->
+        <mxCell id="f_p4_d3" value="Cập nhật trạng thái cont (4.20)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F97316;fontColor=#FFEDD5;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p4" target="d3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="442" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4.0 -> D4 -->
+        <mxCell id="f_p4_d4" value="Cập nhật vị trí slot bãi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p4" target="d4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 4.0 -> D6 -->
+        <mxCell id="f_p4_d6" value="Ghi nhận di chuyển (4.19)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F97316;fontColor=#FFEDD5;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p4" target="d6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="442" y="806" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Shipping -> 5.0 -->
+        <mxCell id="f_s_p5" value="Đặt hẹn Hạ bãi / Lấy cont (4.13, 4.14)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C084FC;fontColor=#F3E8FF;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_shipping" target="p5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1540" y="128" />
+              <mxPoint x="1540" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Driver -> 5.0 -->
+        <mxCell id="f_dr_p5" value="Đặt lịch + Giấy HQ + Thanh toán VietQR &amp;amp; Nhận Mã QR Vào Cổng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F97316;fontColor=#FFEDD5;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_driver" target="p5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Operator -> 5.0 -->
+        <mxCell id="f_op_p5" value="Quét Mã QR Cổng (Chứng minh đã TT), Check seal &amp;amp; Giấy HQ (4.15-4.17)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#22C55E;fontColor=#BBF7D0;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_operator" target="p5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="745" />
+              <mxPoint x="1120" y="745" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5.0 -> D5 -->
+        <mxCell id="f_p5_d5" value="Lưu / Cập nhật Lịch hẹn Cổng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#A1A1AA;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p5" target="d5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="558" />
+              <mxPoint x="1010" y="701" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5.0 -> D6 -->
+        <mxCell id="f_p5_d6" value="Ghi nhận xe ra/vào bãi (4.19)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F97316;fontColor=#FFEDD5;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p5" target="d6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1158" y="806" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- D2, D3, D4, D5 -> 6.0 -->
+        <mxCell id="f_d2_p6" value="Dữ liệu Tàu &amp;amp; Bến" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d2" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="585" y="331" />
+              <mxPoint x="585" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f_d3_p6" value="Số lượng Container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d3" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="496" />
+              <mxPoint x="610" y="960" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f_d4_p6" value="Tỷ lệ lấp đầy Bãi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d4" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="635" y="596" />
+              <mxPoint x="635" y="975" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f_d5_p6" value="Lưu lượng Cổng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#71717A;fontColor=#E4E4E7;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d5" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="975" y="701" />
+              <mxPoint x="975" y="965" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 6.0 -> Manager & Operator -->
+        <mxCell id="f_p6_m" value="Dashboard điều hành tổng thể" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p6" target="ent_manager">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="115" y="968" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f_p6_op" value="Biểu đồ hoạt động bãi &amp;amp; cổng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3B82F6;fontColor=#93C5FD;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p6" target="ent_operator">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="162" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== NEW CUSTOMS CLEARANCE FLOWS (7.0 & D7) ==================== -->
+        <!-- Customs Authority <-> 7.0 -->
+        <mxCell id="f_cus_p7" value="Cấp &amp;amp; Đối chiếu Giấy thông quan (HQ)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=2;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="ent_customs" target="p7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 7.0 <-> D7 -->
+        <mxCell id="f_p7_d7" value="Lưu &amp;amp; Xác thực Mã Thông quan (Tàu / Cont)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=2;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p7" target="d7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 2.0 <-> D7 (Check Vessel Customs before Berthing / Unloading / Departure) -->
+        <mxCell id="f_d7_p2" value="Kiểm tra Thông quan Tàu trước khi Cập bến / Dỡ hàng" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=2;dashed=1;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d7" target="p2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="411" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5.0 <-> 7.0 (Check Truck/Container Customs before Gate In / Gate Out) -->
+        <mxCell id="f_p5_p7" value="Bắt buộc Thông quan trước khi Gate-in (Hạ hàng) / Gate-out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=2;dashed=1;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p5" target="p7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 3.0 <-> 7.0 (Container Customs Declaration) -->
+        <mxCell id="f_p3_p7" value="Đồng bộ trạng thái Thông quan Cont" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;strokeWidth=1.5;dashed=1;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="p3" target="p7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- D7 -> 6.0 (Customs Audit to Dashboard) -->
+        <mxCell id="f_d7_p6" value="Số liệu Thông quan HQ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#06B6D4;fontColor=#67E8F9;fontSize=10;labelBackgroundColor=#121212;" edge="1" parent="1" source="d7" target="p6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="955" y="411" />
+              <mxPoint x="955" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

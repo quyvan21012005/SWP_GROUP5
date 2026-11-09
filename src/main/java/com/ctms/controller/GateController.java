@@ -39,6 +39,32 @@ public class GateController {
         return "gate/index";
     }
 
+    @PostMapping("/scan-qr")
+    public String scanDriverQr(@RequestParam("qrCode") String qrCode,
+                               RedirectAttributes redirectAttributes) {
+        var appOpt = appointmentService.findByGatePassOrBooking(qrCode);
+        if (appOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Quét QR thất bại: Không tìm thấy lịch hẹn hoặc Mã QR Vào Cổng (" + qrCode + ") không hợp lệ!");
+            return "redirect:/gate";
+        }
+        var app = appOpt.get();
+        if (Boolean.FALSE.equals(app.getPaid()) || app.getGatePassCode() == null || app.getGatePassCode().isBlank()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Cảnh báo tại Cổng: Xe " + app.getLicensePlate() + " (Booking: " + app.getBookingNumber()
+                            + ") CHƯA THANH TOÁN phí nâng hạ cảng! Yêu cầu tài xế thanh toán qua VietQR (NGUYEN VAN QUY - 0867601156) để lấy Mã QR Vào Cổng.");
+            return "redirect:/gate";
+        }
+        redirectAttributes.addFlashAttribute("qrVerifiedMessage",
+                "Quét Mã QR Vào Cổng thành công (" + app.getGatePassCode() + ")! Đã xác thực xe " + app.getLicensePlate()
+                        + " ĐÃ THANH TOÁN & CÓ GIẤY THÔNG QUAN HQ (" + app.getCustomsClearanceCode() + ").");
+        if (app.getAppointmentType() == com.ctms.model.Appointment.AppointmentType.EXPORT_DROPOFF) {
+            return "redirect:/gate/in?booking=" + app.getBookingNumber();
+        } else {
+            return "redirect:/gate/out?booking=" + app.getBookingNumber();
+        }
+    }
+
     /**
      * Use Case: Confirm Gate In
      */
@@ -67,13 +93,15 @@ public class GateController {
                                 @RequestParam(value = "bookingNumber", required = false) String bookingNumber,
                                 @RequestParam("licensePlate") String licensePlate,
                                 @RequestParam("customsClearanceCode") String customsClearanceCode,
+                                @RequestParam(value = "gatePassCode", required = false) String gatePassCode,
                                 @AuthenticationPrincipal UserDetails userDetails,
                                 RedirectAttributes redirectAttributes) {
         try {
             String operatorName = userDetails != null ? userDetails.getUsername() : "Gate Operator";
-            gateService.confirmGateIn(containerNumber, sealNumber, containerType, cargoStatus, condition, bookingNumber, licensePlate, customsClearanceCode, operatorName);
+            gateService.confirmGateIn(containerNumber, sealNumber, containerType, cargoStatus, condition, bookingNumber, licensePlate, customsClearanceCode, gatePassCode, operatorName);
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Xác nhận xe " + licensePlate + " mang cont " + containerNumber + " (Giấy thông quan HQ: " + customsClearanceCode.toUpperCase() + ") vào cổng (Gate In) thành công!");
+                    "Xác nhận xe " + licensePlate + " mang cont " + containerNumber + " (Giấy HQ: " + customsClearanceCode.toUpperCase()
+                            + " | Mã QR Cổng: " + (gatePassCode != null && !gatePassCode.isBlank() ? gatePassCode.toUpperCase() : "Đã xác thực") + ") vào cổng (Gate In) thành công!");
             return "redirect:/gate";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi Gate In: " + e.getMessage());
@@ -108,13 +136,15 @@ public class GateController {
                                  @RequestParam(value = "condition", defaultValue = "GOOD") Container.Condition condition,
                                  @RequestParam("licensePlate") String licensePlate,
                                  @RequestParam("customsClearanceCode") String customsClearanceCode,
+                                 @RequestParam(value = "gatePassCode", required = false) String gatePassCode,
                                  @AuthenticationPrincipal UserDetails userDetails,
                                  RedirectAttributes redirectAttributes) {
         try {
             String operatorName = userDetails != null ? userDetails.getUsername() : "Gate Operator";
-            gateService.confirmGateOut(containerNumber, sealNumber, condition, licensePlate, customsClearanceCode, operatorName);
+            gateService.confirmGateOut(containerNumber, sealNumber, condition, licensePlate, customsClearanceCode, gatePassCode, operatorName);
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Xác nhận xe " + licensePlate + " chở cont " + containerNumber + " (Giấy thông quan HQ: " + customsClearanceCode.toUpperCase() + ") xuất bãi (Gate Out) thành công!");
+                    "Xác nhận xe " + licensePlate + " chở cont " + containerNumber + " (Giấy HQ: " + customsClearanceCode.toUpperCase()
+                            + " | Mã QR Cổng: " + (gatePassCode != null && !gatePassCode.isBlank() ? gatePassCode.toUpperCase() : "Đã xác thực") + ") xuất bãi (Gate Out) thành công!");
             return "redirect:/gate";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi Gate Out: " + e.getMessage());

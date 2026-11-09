@@ -27,6 +27,12 @@
                     </div>
                 </div>
 
+                <!-- Thông báo Quét QR thành công -->
+                <div th:if="${qrVerifiedMessage}" class="bg-indigo-600 text-white p-4 border-b border-indigo-700 flex items-center gap-3 text-xs font-bold">
+                    <i class="fa-solid fa-qrcode text-xl text-emerald-300 shrink-0"></i>
+                    <span th:text="${qrVerifiedMessage}">Quét QR thành công!</span>
+                </div>
+
                 <!-- Thông tin vị trí bãi được điều phối trước -->
                 <div th:if="${app != null and app.container != null and app.container.currentSlot != null}"
                      class="bg-emerald-100/80 p-4 border-b border-emerald-300 flex items-center justify-between gap-3 text-xs text-emerald-950 font-medium">
@@ -90,6 +96,21 @@
                             <label class="flex items-center gap-2 text-xs text-emerald-800 font-medium pt-1 cursor-pointer">
                                 <input type="checkbox" required checked class="rounded text-emerald-600 focus:ring-emerald-500">
                                 <span>Xác nhận tài xế đã xuất trình Giấy thông quan của Hải quan hợp lệ cho lô hàng / container này.</span>
+                            </label>
+                        </div>
+
+                        <!-- Gate Pass QR Code (Chứng minh đã thanh toán) -->
+                        <div class="md:col-span-2 p-4 rounded-xl bg-indigo-50 border border-indigo-300 space-y-2">
+                            <label class="block text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-qrcode text-indigo-600"></i> Mã QR Vé Vào Cổng (Chứng Minh Đã Thanh Toán VietQR) *
+                            </label>
+                            <input type="text" name="gatePassCode" required
+                                   th:value="${app != null and app.gatePassCode != null ? app.gatePassCode : 'QR-PASS-BKEXP2026002-1002'}"
+                                   placeholder="VD: QR-PASS-BKEXP2026002-1002"
+                                   class="w-full p-2.5 bg-white border border-indigo-400 rounded-xl text-xs font-mono font-bold uppercase text-indigo-950 focus:ring-2 focus:ring-indigo-600">
+                            <label class="flex items-center gap-2 text-xs text-indigo-800 font-medium pt-1 cursor-pointer">
+                                <input type="checkbox" required checked class="rounded text-indigo-600 focus:ring-indigo-500">
+                                <span>Đã quét mã QR xác nhận tài xế đã thanh toán phí nâng hạ cảng (NGUYEN VAN QUY - 0867601156).</span>
                             </label>
                         </div>
 

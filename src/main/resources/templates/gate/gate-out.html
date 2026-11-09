@@ -19,6 +19,12 @@
                     </div>
                 </div>
 
+                <!-- Thông báo Quét QR thành công -->
+                <div th:if="${qrVerifiedMessage}" class="bg-indigo-600 text-white p-4 border-b border-indigo-700 flex items-center gap-3 text-xs font-bold">
+                    <i class="fa-solid fa-qrcode text-xl text-emerald-300 shrink-0"></i>
+                    <span th:text="${qrVerifiedMessage}">Quét QR thành công!</span>
+                </div>
+
                 <form th:action="@{/gate/out}" method="post" class="p-6 space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- License Plate -->
@@ -72,6 +78,21 @@
                             <label class="flex items-center gap-2 text-xs text-emerald-800 font-medium pt-1 cursor-pointer">
                                 <input type="checkbox" required checked class="rounded text-emerald-600 focus:ring-emerald-500">
                                 <span>Đã kiểm tra Giấy thông quan của Hải quan hợp lệ, cho phép tài xế kéo container rời cảng (Gate Out).</span>
+                            </label>
+                        </div>
+
+                        <!-- Gate Pass QR Code (Chứng minh đã thanh toán) -->
+                        <div class="md:col-span-2 p-4 rounded-xl bg-indigo-50 border border-indigo-300 space-y-2">
+                            <label class="block text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-qrcode text-indigo-600"></i> Mã QR Vé Vào Cổng (Chứng Minh Đã Thanh Toán VietQR) *
+                            </label>
+                            <input type="text" name="gatePassCode" required
+                                   th:value="${app != null and app.gatePassCode != null ? app.gatePassCode : 'QR-PASS-BKIMP2026001-1001'}"
+                                   placeholder="VD: QR-PASS-BKIMP2026001-1001"
+                                   class="w-full p-2.5 bg-white border border-indigo-400 rounded-xl text-xs font-mono font-bold uppercase text-indigo-950 focus:ring-2 focus:ring-indigo-600">
+                            <label class="flex items-center gap-2 text-xs text-indigo-800 font-medium pt-1 cursor-pointer">
+                                <input type="checkbox" required checked class="rounded text-indigo-600 focus:ring-indigo-500">
+                                <span>Đã quét mã QR xác nhận tài xế đã thanh toán phí nâng hạ cảng (NGUYEN VAN QUY - 0867601156).</span>
                             </label>
                         </div>
                     </div>

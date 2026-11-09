@@ -53,6 +53,19 @@ public class Appointment {
     @Builder.Default
     private Boolean customsCleared = true; // Trạng thái đã có giấy thông quan Hải quan
 
+    @Column(name = "paid")
+    @Builder.Default
+    private Boolean paid = false; // Trạng thái đã thanh toán phí nâng hạ cảng
+
+    @Column(name = "gate_pass_code", length = 80)
+    private String gatePassCode; // Mã QR Vé Vào Cổng cấp sau khi thanh toán thành công
+
+    @Column(name = "payment_amount")
+    private Integer paymentAmount; // Số tiền thanh toán (VNĐ)
+
+    @Column(name = "paid_at")
+    private LocalDateTime paidAt; // Thời điểm xác nhận thanh toán
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default

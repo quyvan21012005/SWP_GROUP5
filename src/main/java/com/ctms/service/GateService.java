@@ -24,9 +24,9 @@ public class GateService {
     private final YardSlotRepository yardSlotRepository;
 
     public GateService(ContainerRepository containerRepository,
-                       AppointmentRepository appointmentRepository,
-                       MovementHistoryRepository movementHistoryRepository,
-                       YardSlotRepository yardSlotRepository) {
+            AppointmentRepository appointmentRepository,
+            MovementHistoryRepository movementHistoryRepository,
+            YardSlotRepository yardSlotRepository) {
         this.containerRepository = containerRepository;
         this.appointmentRepository = appointmentRepository;
         this.movementHistoryRepository = movementHistoryRepository;
@@ -68,16 +68,17 @@ public class GateService {
      */
     @Transactional
     public Container confirmGateIn(String containerNumber,
-                                   String sealNumber,
-                                   Container.ContainerType containerType,
-                                   Container.CargoStatus cargoStatus,
-                                   Container.Condition condition,
-                                   String bookingNumber,
-                                   String licensePlate,
-                                   String customsClearanceCode,
-                                   String operatorName) {
+            String sealNumber,
+            Container.ContainerType containerType,
+            Container.CargoStatus cargoStatus,
+            Container.Condition condition,
+            String bookingNumber,
+            String licensePlate,
+            String customsClearanceCode,
+            String gatePassCode,
+            String operatorName) {
 
-        // 1. Kiểm tra xác minh (<<include>> Verify Container & Customs Clearance)
+        // 1. Kiểm tra xác minh (<<include>> Verify Container, Customs Clearance & Payment QR)
         VerificationResult verification = verifyContainer(containerNumber, sealNumber, bookingNumber);
 
         Optional<Appointment> appOpt = (bookingNumber != null && !bookingNumber.trim().isEmpty())
@@ -89,7 +90,18 @@ public class GateService {
                 : appOpt.map(Appointment::getCustomsClearanceCode).orElse(null);
 
         if (effectiveCustomsCode == null || effectiveCustomsCode.trim().isEmpty()) {
-            throw new IllegalStateException("Từ chối qua cổng (Gate In): Tài xế / Container chưa có Giấy thông quan của Hải quan!");
+            throw new IllegalStateException(
+                    "Từ chối qua cổng (Gate In): Tài xế / Container chưa có Giấy thông quan của Hải quan!");
+        }
+
+        String effectivePassCode = (gatePassCode != null && !gatePassCode.trim().isEmpty())
+                ? gatePassCode.trim().toUpperCase()
+                : appOpt.map(Appointment::getGatePassCode).orElse(null);
+
+        if (appOpt.isPresent() && Boolean.FALSE.equals(appOpt.get().getPaid())
+                && (effectivePassCode == null || effectivePassCode.isEmpty())) {
+            throw new IllegalStateException(
+                    "Từ chối qua cổng (Gate In): Tài xế chưa thanh toán phí nâng hạ cảng và chưa có Mã QR Vào Cổng!");
         }
 
         // 2. Tìm hoặc khởi tạo container
@@ -113,11 +125,21 @@ public class GateService {
         final Container savedContainer = containerRepository.save(container);
 
         // 3. Cập nhật lịch hẹn nếu có
+        final String finalPassCode = (effectivePassCode != null && !effectivePassCode.isEmpty())
+                ? effectivePassCode
+                : "QR-PASS-" + container.getContainerNumber();
         appOpt.ifPresent(app -> {
             app.setStatus(Appointment.AppointmentStatus.CHECKED_IN);
             app.setContainer(savedContainer);
             app.setCustomsClearanceCode(effectiveCustomsCode);
             app.setCustomsCleared(true);
+            app.setPaid(true);
+            if (app.getPaidAt() == null) {
+                app.setPaidAt(LocalDateTime.now());
+            }
+            if (app.getGatePassCode() == null || app.getGatePassCode().isEmpty()) {
+                app.setGatePassCode(finalPassCode);
+            }
             appointmentRepository.save(app);
         });
 
@@ -130,7 +152,8 @@ public class GateService {
                 .truckPlate(licensePlate)
                 .operatorName(operatorName != null ? operatorName : "Gate Operator")
                 .timestamp(LocalDateTime.now())
-                .notes("Xe " + licensePlate + " vào cổng thành công. Seal: " + sealNumber + ". Giấy thông quan HQ: " + effectiveCustomsCode + ". " + verification.getMessage())
+                .notes("Xe " + licensePlate + " vào cổng thành công. Seal: " + sealNumber + ". Giấy thông quan HQ: "
+                        + effectiveCustomsCode + ". Mã QR Thanh toán: " + finalPassCode + ". " + verification.getMessage())
                 .build();
         movementHistoryRepository.save(movement);
 
@@ -139,16 +162,17 @@ public class GateService {
 
     /**
      * Use Case chính: Confirm Gate Out
-     * <<include>> Verify Container & Customs Clearance
+     * <<include>> Verify Container & Customs Clearance & Payment QR
      * <<include>> Record Container Movement
      */
     @Transactional
     public Container confirmGateOut(String containerNumber,
-                                    String sealNumber,
-                                    Container.Condition condition,
-                                    String licensePlate,
-                                    String customsClearanceCode,
-                                    String operatorName) {
+            String sealNumber,
+            Container.Condition condition,
+            String licensePlate,
+            String customsClearanceCode,
+            String gatePassCode,
+            String operatorName) {
 
         Container container = containerRepository.findByContainerNumber(containerNumber.trim().toUpperCase())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy container: " + containerNumber));
@@ -158,11 +182,22 @@ public class GateService {
         String effectiveCustomsCode = (customsClearanceCode != null && !customsClearanceCode.trim().isEmpty())
                 ? customsClearanceCode.trim().toUpperCase()
                 : (container.getCustomsClearanceCode() != null && !container.getCustomsClearanceCode().trim().isEmpty()
-                    ? container.getCustomsClearanceCode()
-                    : appOpt.map(Appointment::getCustomsClearanceCode).orElse(null));
+                        ? container.getCustomsClearanceCode()
+                        : appOpt.map(Appointment::getCustomsClearanceCode).orElse(null));
 
-        if (effectiveCustomsCode == null || effectiveCustomsCode.trim().isEmpty() || Boolean.FALSE.equals(container.getCustomsCleared())) {
-            throw new IllegalStateException("Từ chối xuất cổng (Gate Out): Tài xế / Container " + container.getContainerNumber() + " chưa có Giấy thông quan hợp lệ của Hải quan!");
+        if (effectiveCustomsCode == null || effectiveCustomsCode.trim().isEmpty()
+                || Boolean.FALSE.equals(container.getCustomsCleared())) {
+            throw new IllegalStateException("Từ chối xuất cổng (Gate Out): Tài xế / Container "
+                    + container.getContainerNumber() + " chưa có Giấy thông quan hợp lệ của Hải quan!");
+        }
+
+        String effectivePassCode = (gatePassCode != null && !gatePassCode.trim().isEmpty())
+                ? gatePassCode.trim().toUpperCase()
+                : appOpt.map(Appointment::getGatePassCode).orElse(null);
+
+        if (appOpt.isPresent() && Boolean.FALSE.equals(appOpt.get().getPaid())
+                && (effectivePassCode == null || effectivePassCode.isEmpty())) {
+            throw new IllegalStateException("Từ chối xuất cổng (Gate Out): Tài xế chưa thanh toán phí dịch vụ cảng và chưa có Mã QR Vào Cổng!");
         }
 
         // 1. Giải phóng ô bãi nếu container đang ở trong bãi
@@ -184,10 +219,20 @@ public class GateService {
         containerRepository.save(container);
 
         // 3. Cập nhật lịch hẹn nếu có
+        final String finalPassCode = (effectivePassCode != null && !effectivePassCode.isEmpty())
+                ? effectivePassCode
+                : "QR-PASS-" + container.getContainerNumber();
         appOpt.ifPresent(app -> {
             app.setStatus(Appointment.AppointmentStatus.COMPLETED);
             app.setCustomsClearanceCode(effectiveCustomsCode);
             app.setCustomsCleared(true);
+            app.setPaid(true);
+            if (app.getPaidAt() == null) {
+                app.setPaidAt(LocalDateTime.now());
+            }
+            if (app.getGatePassCode() == null || app.getGatePassCode().isEmpty()) {
+                app.setGatePassCode(finalPassCode);
+            }
             appointmentRepository.save(app);
         });
 
@@ -200,7 +245,9 @@ public class GateService {
                 .truckPlate(licensePlate)
                 .operatorName(operatorName != null ? operatorName : "Gate Operator")
                 .timestamp(LocalDateTime.now())
-                .notes("Xe " + licensePlate + " nhận cont xuất cổng. Seal: " + sealNumber + ". Đã kiểm tra Giấy thông quan HQ: " + effectiveCustomsCode)
+                .notes("Xe " + licensePlate + " nhận cont xuất cổng. Seal: " + sealNumber
+                        + ". Đã kiểm tra Giấy thông quan HQ: " + effectiveCustomsCode
+                        + ". Mã QR Thanh toán: " + finalPassCode)
                 .build();
         movementHistoryRepository.save(movement);
 
